@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "intreeactive"
+dynamic = ["version"]
+dependencies = [
+    "pandas==2.2.2",
+    "biopython>=1.84",
+    "numpy>=2.0.1",
+    "plotly>=5.23.0",
+    "pytest>=8.3.2",
+    "beautifulsoup4>=4.12.3",
+    "lxml>=5.3.0"
+]
+requires-python = ">= 3.12.5"
+authors = [
+    { name = "Jess Friedersdorff" },
+    { name = "Ashley Shalloe" },
+    { name = "UKHSA" }
+]
+description = """
+Create an interactive tree.
+It has interactive features such as move, zoom and pan, on-hover sample metadata, node colouring, custom node
+label creation and identifying neighbours using custom SNP distance thresholds.
+All information and code needed is included in one html file.
+"""
+readme = "README.md"
+
+[tool.setuptools.dynamic]
+version = { attr = "intreeactive.__version__" }
+
+[project.scripts]
+intreeactive = "intreeactive.cli:main"
+
+[tool.ruff]
+line-length = 120
+
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # comprehensions
+    "C4"
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["intreeactive", "html_res"]
+
+[tool.setuptools.package-data]
+# Include all html_res relative to the root of src
+"html_res" = ["*", "help_images/*"]
+
+
+

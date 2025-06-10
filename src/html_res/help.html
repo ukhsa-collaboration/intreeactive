@@ -1,0 +1,212 @@
+<div id="helpModalCloseBtn" onclick="document.getElementById('helpModal').classList.toggle('hidden')">X</div>
+
+<style>
+    :root{
+        --ukhsa-teal: #007C91;
+    }
+    #helpContainer {
+        max-width: 700px;
+    }
+
+    #helpContainer figure img {
+        max-width: 600px;
+        border: 1px solid grey;
+    }
+
+    #helpContainer figure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid lightgray;
+        padding: 20px 5px;
+        box-shadow: 10px 10px 20px lightgray;
+    }
+
+    #helpContainer figure figcaption {
+        font-style: italic;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    #helpContainer h3 {
+        margin-top: 40px;
+        text-align: center;
+        background: var(--ukhsa-teal);
+        color: white;
+        padding: 9px;
+    }
+
+    #helpContents a {
+        display: block;
+    }
+
+    #helpContents {
+        list-style-type: disclosure-closed;
+    }
+</style>
+
+<h1>Intreeactive help</h1>
+
+<h2>What is intreeactive?</h2>
+
+<p>intreeactive is used to create a single simple interactive tree in HTML format.</p>
+
+<div id="helpContainer">
+    <h2>How do I...</h2>
+
+    <ul id="helpContents"></ul>
+
+    <h3>Zoom and pan around the tree?</h3>
+
+    <figure>
+        <img src="help_images/selecting_region.png" />
+        <figcaption>Using the box select tool</figcaption>
+    </figure>
+
+    <p>To zoom in to a region of interest, click and drag to select that region.</p>
+
+    <figure>
+        <img src="help_images/scale_controls.png" />
+        <figcaption>Using the scale controls</figcaption>
+    </figure>
+
+    <p>To zoom in/out on the x-axis only, use the "X+" / "X-" buttons.</p>
+    <p>To zoom in/out on the y-axis only, use the "Y+" / "Y-" buttons.</p>
+    <p>To reset the zoom, either click the "Reset" button, or double click the tree.</p>
+
+    <figure>
+        <img src="help_images/pan_x_axis.png" />
+        <figcaption>Scrolling the x-axis</figcaption>
+    </figure>
+
+    <p>Hovering over the bottom edge of the tree changes the cursor to a double arrow. Click and drag to scroll the
+        x-axis
+        left or right - the same is possible for the y-axis by hovering over the left hand edge of the tree.</p>
+
+    <figure>
+        <img src="help_images/pan_tool.png" />
+        <figcaption>Switching to the pan tool</figcaption>
+    </figure>
+
+    <p>Alternatively, by hovering at the top right corner of the tree the tool cluster becomes visible. Select the "pan"
+        tool. It is then possible to click and drag to freely pan aroud the tree. To switch back to normal operation,
+        instead select the "box select" tool.</p>
+
+    <h3>Colour tips by metadata?</h3>
+
+    <figure>
+        <img src="help_images/colour_tips_by_metadata.png" />
+        <figcaption>Using the tip colour dropdown</figcaption>
+    </figure>
+
+    <p>Tips on the tree can be coloured by associated metadata - the dropdown at the top-right corner of the tree can be
+        used to select which field is used.</p>
+
+    <h3>Show labels on the tips of the tree?</h3>
+
+    <figure>
+        <img src="help_images/label_tools.png" />
+        <figcaption>Label by dropdown and show/hide labels buttons</figcaption>
+    </figure>
+
+    <p>Tip labels can be enabled by clicking "Show labels". By default these show "ID", but by clicking the "Label by"
+        dropdown this can be changed to any available metadata fields.</p>
+
+    <figure>
+        <img src="help_images/label_tools_builder.png" />
+        <figcaption>Using the label builder</figcaption>
+    </figure>
+
+    <p>To show multiple metadata fields in the tip labels, for example - ID and date, select the first field from the
+        "Label by" dropdown then click "+". Repeat this for each additional field to be added.</p>
+    <p>To remove a field from the label, hover over it and click to delete it. If all fields are deleted, the label will
+        be whichever field is in the dropdown menu as per normal operation.</p>
+
+    <h3>Search for a particular ID?</h3>
+
+    <figure>
+        <img src="help_images/search_by_id.png" />
+        <figcaption>Searching for IDs containing "r0119"</figcaption>
+        <img src="help_images/search_by_id_result.png" />
+        <figcaption>Matching ID highlighted in red</figcaption>
+    </figure>
+
+    <p>To search for tip IDs, enter your query into the "Highlight by ID" box. All matches will be highlighted on the
+        tree in red.</p>
+    <p>Note, if zoomed in, some highlighted IDs may be outside the frame. Reset the zoom to ensure all matches are
+        visible.</p>
+    <p>Click "clear" to reset the highlight.</p>
+
+    <h3>Get detailed information about a tip on the tree?</h3>
+
+    <figure>
+        <img src="help_images/hover_tooltip.png" />
+        <figcaption>Hovering over a tip on the tree</figcaption>
+    </figure>
+
+    <p>Hovering over a tip on the tree displays detailed metadata associated with that tip.</p>
+
+    <figure>
+        <img src="help_images/detailed_search.png" />
+        <figcaption>Using search and compare metadata</figcaption>
+    </figure>
+
+    <p>This metadata is also visible by searching for the ID in the "Seach and compare metadata" section.</p>
+    <p>Click the underlined "ID" to highlight the corresponding tip on the tree.</p>
+
+    <h3>Find the nearest neighbours for a particular ID?</h3>
+
+    <figure>
+        <img src="help_images/nearest_neighbours.png" />
+        <figcaption>Nearest neighbours displayed in the "Search and compare metadata" section</figcaption>
+    </figure>
+
+    <p>By default, the nearest neighbours for an ID are displayed in the "Search and compare metadata" section. This
+        finds the minimum number of SNPs to a neighbour, then displays all neighbours within that SNP distance.</p>
+    <p>In this example, there are 4 neighbours - a count is given at the top. The number of SNPs is 2 - indicated to the
+        right of the ID.</p>
+    <p>Clicking an ID will highlight it on the tree. Selecting the "Highlight all" button will highlight the sequence of
+        interest and its nearest neighbours.</p>
+
+    <h3>Use my own custom SNP threshold for nearest neighbours?</h3>
+
+    <figure>
+        <img src="help_images/nearest_neighbours_custom_snp_threshold.png" />
+        <figcaption>Setting a custom SNP threshold</figcaption>
+    </figure>
+
+    <p>By default, the minimum number of SNPs to a neighbour is used - this is the "Use min" option.</p>
+    <p>To set a custom threshold, select "Set manually" and enter the number of SNPs to use in the box to the right of
+        this.</p>
+    <p>If the custom threshold is lower than the minimum, "No neighbours within threshold" will be displayed in the
+        "Search and compare metadata" section.</p>
+
+    <h3>Download an image of the current view?</h3>
+
+    <figure>
+        <img src="help_images/download_plot.png" />
+        <figcaption>Using the download tool</figcaption>
+    </figure>
+
+    <p>To download a snapshot of the current tree view, hover of the top-right corner of the tree. The "download plot"
+        tool becomes visible.</p>
+    <p>Clicking this will save an image of the current view.</p>
+</div>
+
+<script>
+    'use strict'
+
+    // build the contents table
+    const contentsELm = document.getElementById("helpContents");
+    const helpContainerElm = document.getElementById("helpContainer");
+
+    [...helpContainerElm.getElementsByTagName("h3")].forEach((x, i) => {
+        var linkElm = document.createElement("a")
+        var linkElmListItem = document.createElement("li")
+        x.id = `helpHeading_${i}`
+        linkElm.innerHTML = x.innerText
+        linkElm.href = `#helpHeading_${i}`
+        linkElmListItem.append(linkElm)
+        contentsELm.append(linkElmListItem)
+    })
+</script>

@@ -1,0 +1,392 @@
+:root {
+    --page-background: #f1f1f1;
+    --panel-background: white;
+    --panel-foreground: black;
+    --table-row-odd: white;
+    --table-row-even: #f1f1f1;
+    --table-row-text: black;
+    --main-border: lightgray;
+}
+
+html {
+    font-family: sans-serif;
+    background: var(--page-background)
+}
+
+body {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    margin: 0 auto;
+}
+
+.fancyDiv {
+    border: 1px solid var(--main-border);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    background: var(--panel-background)
+}
+
+.fancyDiv h2 {
+    color: var(--panel-foreground);
+}
+
+.metadataTable,
+.metadataTable tr,
+.metadataTable td,
+.metadataTable th {
+    border: 1px solid var(--main-border);
+    border-collapse: collapse;
+    color: var(--table-row-text);
+}
+
+.metadataTable td,
+.metadataTable th {
+    padding: 5px;
+}
+
+.metadataTable tr:nth-child(even) {
+    background: var(--table-row-even);
+}
+
+.metadataTable tr:nth-child(odd) {
+    background: var(--table-row-odd);
+}
+
+.fancyDiv input,
+.fancyDiv select,
+.fancyDiv button {
+    margin: 5px;
+    padding: 3px;
+    border-radius: 0.5em;
+    border: 1px solid gray;
+}
+
+.fancyDiv select {
+    background: white;
+    transition: background 0.2s;
+}
+
+.fancyDiv button:hover {
+    background: rgb(252, 252, 252);
+}
+
+.fancyDiv button:active {
+    background: lightgray;
+}
+
+#metadataDivControls {
+    background: #ffe3d8;
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+    margin: 5px;
+}
+
+#metadataDivContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    overflow-y: auto;
+    height: 100%;
+    height: -moz-available;
+    height: -webkit-fill-available;
+    height: fill-available;
+}
+
+#metadataDivContainer h2 {
+    margin: 0px;
+}
+
+#leftPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    background: var(--panel-background);
+    margin: 10px 5px 10px 10px;
+    overflow: clip;
+    border-radius: 10px;
+    border: 1px solid var(--main-border);
+}
+
+#rightPanel {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.metadataTable {
+    margin: 5px;
+    word-break: break-word;
+    text-align: center;
+}
+
+.metadataTable .nnCount,
+.metadataTable .nnSNPs,
+.metadataTable .nnID,
+.metadataTable .nnHighlightAll {
+    background: #5860af;
+    color: white;
+    border-radius: 1em;
+    padding: 1px 5px;
+    margin: 1px;
+    display: inline-block;
+}
+
+.metadataTable .nnHighlightAll {
+    padding: 2px 0.5em;
+    cursor: pointer;
+}
+
+.metadataTable .nnHighlightAll:hover {
+    background: #d6defd;
+    color: black;
+}
+
+.metadataTable .nnCount {
+    padding: 2px 0.5em;
+}
+
+.metadataTable .nnID {
+    background: unset;
+    color: black;
+    transition: background 0.2s;
+}
+
+.metadataTable .nnID:hover {
+    background: #d6defd;
+    color: black;
+    cursor: pointer;
+}
+
+.metadataTable .metadataId {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.metadataTable .nnWithMeta {
+    border: 1px solid var(--main-border);
+    border-radius: 1em;
+    padding: 1px 5px;
+    display: grid;
+    align-items: center;
+    margin: 5px 0px;
+    background: white;
+}
+
+.metadataTable .nnWithMeta .nnID {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.metadataTable .nnWithMeta .nnSNPs {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    min-width: 1em;
+}
+
+#ashleyDiv {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+#ashleyDiv table,
+#ashleyDiv table tr,
+#ashleyDiv table td,
+#ashleyDiv table th {
+    border: 1px solid var(--main-border);
+    border-collapse: collapse;
+    color: var(--table-row-text);
+}
+
+#ashleyDiv table td,
+#ashleyDiv table th {
+    padding: 5px;
+}
+
+#ashleyDiv table {
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+}
+
+#ashleyDiv>table tr:nth-child(even) {
+    background: var(--table-row-even);
+}
+
+#ashleyDiv>table tr:nth-child(odd) {
+    background: var(--table-row-odd);
+}
+
+div:has(> .plotly-graph-div) {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+#snpThresholdSpinner {
+    width: 3em;
+}
+
+#helpToggle {
+    padding: 5px;
+    background: blue;
+    color: white;
+    border: 5px solid white;
+    border-radius: 100%;
+    width: 1em;
+    height: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    position: fixed;
+    bottom: 25px;
+    left: 75px;
+    filter: opacity(0.5);
+    transition: filter 0.2s;
+    cursor: pointer;
+    box-shadow: 0px 0px 4px blue;
+}
+
+#helpToggle:hover {
+    filter: opacity(1)
+}
+
+#helpModal{
+    padding: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    border: 3px solid black;
+    background: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    box-shadow: 5px 5px 5px #00000099;
+    z-index: 5000;
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: clip;
+    font-size: 12pt;
+}
+
+#helpModal.hidden{
+    display: none;
+}
+
+#helpModal h1, #helpModal h2{
+    text-align: center;
+}
+
+#helpModalCloseBtn{
+    position: sticky;
+    left: 100%;
+    top: 0px;
+    background: darkred;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 1em;
+    text-align: center;
+}
+
+#helpModalCloseBtn:hover{
+    background: red;
+}
+
+#darkModeToggle {
+    padding: 5px;
+    background: #ff7f00;
+    color: white;
+    border: 5px solid white;
+    border-radius: 100%;
+    width: 1em;
+    height: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    filter: opacity(0.5);
+    transition: filter 0.2s;
+    cursor: pointer;
+    box-shadow: 0px 0px 4px #ff7f00;
+    user-select: none;
+}
+
+#darkModeToggle:hover {
+    filter: opacity(1)
+}
+
+#ashleyDiv .zoomBtn {
+    min-width: 3em;
+    margin: 5px 2px;
+}
+
+#addFieldBtn {
+    min-width: 3em;
+}
+
+#builtLabelField {
+    font-family: monospace;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#builtLabelField .labelBuilderLabel {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    margin: 3px;
+    padding: 3px 6px;
+    background: #ffe3d8;
+    border: 1px solid salmon;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#builtLabelField .labelBuilderLabel:hover {
+    background: grey;
+    color: rgb(179, 179, 179);
+}
+
+#builtLabelField .labelBuilderLabel:hover::after {
+    content: "X";
+    background: darkred;
+    color: white;
+    z-index: 10;
+    position: absolute;
+    padding: 0px 5px;
+    border-radius: 100%;
+    font-weight: bold;
+}
+
+@media (max-width: 1100px) {
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+}
