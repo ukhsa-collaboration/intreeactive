@@ -44,11 +44,19 @@ def read_in_metadata(path_to_metadata: str | os.PathLike,
                      id_column: str = None) -> tuple[pd.DataFrame, str]:
     """
     Read in metadata and read with Pandas - all cells should be strings.
+    Change the id_column to "ID" and make sure there are no other ID columns.
     """
-    metadata_df = pd.read_csv(path_to_metadata, sep=None, engine='python', encoding='latin-1')
+    metadata_df = pd.read_csv(path_to_metadata, sep=None, engine='python', encoding='windows-1252')
     metadata_df = metadata_df.astype(str)
-    id_column = metadata_df.columns.values[0] if not id_column else id_column
-    return metadata_df, id_column
+    # If id_column supplied and present in the dataframe, use that, else use the first column.
+    if not id_column or id_column not in metadata_df.columns.values:
+        id_column = metadata_df.columns.values[0]
+    # Check if there are any other columns called "ID":
+    if "ID" in metadata_df.columns.values:
+        metadata_df.rename(columns={"ID": "other_id_x"}, inplace=True)
+    new_id_column = "ID"
+    metadata_df.rename(columns={id_column: new_id_column}, inplace=True)
+    return metadata_df, new_id_column
 
 
 def read_in_snp_dist_matrix(path_to_snp_dists: str | os.PathLike) -> pd.DataFrame:
@@ -411,7 +419,7 @@ def get_continuous_colourings(metadata_df: pd.DataFrame,
     return list_of_gradient_colours
 
 
-def inline_html_images(html_res_path: os.PathLike | str, input_html: Path) -> str:
+def inline_html_images(html_res_path: os.PathLike | str, input_html: str) -> str:
     input_html_path = Path(html_res_path, input_html)
     html_str = input_html_path.read_text()
     soup = bs(html_str, features="lxml")
