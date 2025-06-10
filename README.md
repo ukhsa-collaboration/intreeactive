@@ -57,8 +57,8 @@ such as venv*
 2. Move to root of repo:  
    `cd intreeactive`
 
-3. Create and activate conda environment (requires python >= 3.12.5):  
-   `conda create --name intreeactive python>=3.12.5`
+3. Create and activate conda environment (has been tested with python=3.12.5):  
+   `conda create --name intreeactive python=3.12.5`
 
    `conda activate intreeactive`
 
