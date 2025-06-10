@@ -74,7 +74,11 @@ such as venv*
 
 ### ⏩ Quick start ⏩
 
-There is some example data included for a quick start guide. Simply run the command below:
+There is some example data included for a quick start guide. This uses genomic data from a TB outbreak in Greenland from
+the publication by [Bjorn-Mortensen et al (2016)](https://www.nature.com/articles/srep33180#MOESM3), and metadata is
+randomly generated using names and lore from Tolkein's universe.
+
+Simply run the command below:
 
 ```
 intreeactive.exe --tree example/tb_in_middle_earth_tree.new --metadata example/tb_in_middle_earth_metadata.csv \
