@@ -431,3 +431,24 @@ def test_gradient_colours_with_all_same_or_missing():
     assert colours[0] and colours[-1] == 'rgb(128, 128, 128)'
     assert colours[5] == 'rgb(0, 0, 0)' and colours[6] == 'rgb(0, 0, 0)'
     assert [x == 'rgb(0, 0, 131)' for x in colours[1:5]]
+
+
+def test_read_in_metadata():
+    print('Check metadata is parsed correctly when not specifying id column.')
+    df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv')
+    assert id_col == "ID"
+    assert "ID" in df.columns.values
+
+
+def test_read_in_metadata_id_col():
+    print('Check metadata is parsed correctly when specifying id column.')
+    df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv', 'ID_col')
+    assert id_col == "ID"
+    assert "ID" in df.columns.values
+
+
+def test_read_in_metadata_id_wrong():
+    print('Check metadata is parsed correctly when specifying incorrect id column.')
+    df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv', 'id_col')
+    assert id_col == "ID"
+    assert "ID" in df.columns.values
