@@ -1,48 +1,48 @@
 ID_col,Sample_name,First Name,Surname,Age,Place_of_origin,Region_of_Middle-Earth,Date,Sequencing_Date,same_date,Country_of_sequencing,Sequencing_platform,Athelas_resistance,Elanor_resistance
-GE0194_lib3620_nextseq_n0008_151bp,GE0194_n0008,Dï¿½agol,Fisherman,60,Gladden Fields,North,09/06/1992,25/04/2023,01/01/2024,Not Greenland,nextseq,No,No
+GE0194_lib3620_nextseq_n0008_151bp,GE0194_n0008,Dïagol,Fisherman,60,Gladden Fields,North,09/06/1992,25/04/2023,01/01/2024,Not Greenland,nextseq,No,No
 GE0175_lib3601_nextseq_n0008_151bp,GE0175_n0008,Dior,Thingol's Heir,unknown,Doriath,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,No
 GE0012_lib2520_miseq_r0114_301bp,GE0012_r0114,Dori,Dwarf,167,Erebor,North,08/06/1992,01/10/2022,01/01/2024,Greenland,miseq,No,No
-GE0158_lib3584_nextseq_n0008_151bp,GE0158_n0008,Durin,King,3000,Khazad-dï¿½m,North,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0158_lib3584_nextseq_n0008_151bp,GE0158_n0008,Durin,King,3000,Khazad-dïm,North,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
 GE0141_lib2211_hpi_2014-09-17_150bp,GE0141_17/09/2014,Durin's Bane,Balrog,unknown,Moria,West,09/06/1992,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
-GE0080_lib2757_miseq_r0116_301bp,GE0080_r0116,Eï¿½rnur,King,195,Gondor,South,09/06/1992,31/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0080_lib2757_miseq_r0116_301bp,GE0080_r0116,Eïrnur,King,195,Gondor,South,09/06/1992,31/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0190_lib3616_nextseq_n0008_151bp,GE0190_n0008,Ecthelion,of the Fountain,29,Gondolin,West,09/06/1992,04/02/2023,01/01/2024,Not Greenland,nextseq,No,Yes
 GE0115_lib2185_hpi_2014-09-17_150bp,GE0115_17/09/2014,Eilinel,Lady,unknown,Dorthonion,West,09/06/1992,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
 GE0140_lib2210_hpi_2014-09-17_150bp,GE0140_17/09/2014,Elladan,Son of Elrond,2932,Rivendell,North,08/06/1992,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
 GE0079_lib2761_miseq_r0117_301bp,GE0079_r0117,Elrohir,Son of Elrond,2932,Rivendell,North,08/06/1992,31/12/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0174_lib3600_nextseq_n0008_151bp,GE0174_n0008,Elwing,Star Spray,unknown,Sirion,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
-GE0134_lib2204_hpi_2014-09-17_150bp,GE0134_17/09/2014,Eï¿½l,Dark Elf,unknown,Nan Elmoth,West,10/06/1992,04/02/2023,01/01/2024,Greenland,hpi,No,No
+GE0134_lib2204_hpi_2014-09-17_150bp,GE0134_17/09/2014,Eïl,Dark Elf,unknown,Nan Elmoth,West,10/06/1992,04/02/2023,01/01/2024,Greenland,hpi,No,No
 GE0188_lib3614_nextseq_n0010_151bp,GE0188_n0010,Fastred,Eored,45,Rohan,West,10/06/1992,04/02/2023,01/01/2024,Not Greenland,nextseq,No,Yes
 GE0117_lib2187_hpi_2014-09-17_150bp,GE0117_17/09/2014,Finrod,Felagund,unknown,Nargothrond,West,10/06/1992,04/02/2023,01/01/2024,Greenland,hpi,Yes,No
 GE0189_lib3615_nextseq_n0008_151bp,GE0189_n0008,Folca,King,89,Rohan,West,10/06/1992,04/02/2023,01/01/2024,Not Greenland,nextseq,Yes,No
-GE0188_lib3614_nextseq_n0008_151bp,GE0188_n0008,Frï¿½alï¿½f,Hildeson,89,Rohan,West,10/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
+GE0188_lib3614_nextseq_n0008_151bp,GE0188_n0008,Frïalïf,Hildeson,89,Rohan,West,10/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
 GE0090_lib2160_hpi_2014-09-17_150bp,GE0090_17/09/2014,Galdor,of the Havens,unknown,Gray Havens,West,10/06/1992,31/12/2022,01/01/2024,Greenland,hpi,Yes,No
-GE0163_lib3589_nextseq_n0008_151bp,GE0163_n0008,Galdor,Tall,45,Dor-lï¿½min,West,10/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0163_lib3589_nextseq_n0008_151bp,GE0163_n0008,Galdor,Tall,45,Dor-lïmin,West,10/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
 GE0074_lib2755_miseq_r0117_301bp,GE0074_r0117,Glaurung,Dragon,unknown,Nargothrond,West,11/06/1992,31/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
-GE0055_lib2737_miseq_r0122_301bp,GE0055_r0122,Glï¿½in,Son of Grï¿½in,253,Erebor,North,11/06/1992,20/12/2022,01/01/2024,Greenland,miseq,No,No
+GE0055_lib2737_miseq_r0122_301bp,GE0055_r0122,Glïin,Son of Grïin,253,Erebor,North,11/06/1992,20/12/2022,01/01/2024,Greenland,miseq,No,No
 GE0171_lib3597_nextseq_n0008_151bp,GE0171_n0008,Glorfindel,of Gondolin,unknown,Gondolin,West,11/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,Yes
 GE0183_lib3609_nextseq_n0008_151bp,GE0183_n0008,Gorlim,Unhappy,unknown,Dorthonion,West,11/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,No
 GE0157_lib3583_nextseq_n0008_151bp,GE0157_n0008,Gror,Dwarf,257,Iron Hills,North,12/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,Yes
-GE0162_lib3588_nextseq_n0008_151bp,GE0162_n0008,Gundor,Lord,75,Dor-lï¿½min,West,12/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0162_lib3588_nextseq_n0008_151bp,GE0162_n0008,Gundor,Lord,75,Dor-lïmin,West,12/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
 GE0058_lib2750_miseq_r0122_301bp,GE0058_r0122,Gwindor,of Nargothrond,unknown,Nargothrond,West,12/06/1992,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
-GE0161_lib3587_nextseq_n0008_151bp,GE0161_n0008,Hador,Lord,90,Dor-lï¿½min,West,13/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0161_lib3587_nextseq_n0008_151bp,GE0161_n0008,Hador,Lord,90,Dor-lïmin,West,13/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
 GE0182_lib3608_nextseq_n0008_151bp,GE0182_n0008,Haleth,Leader,unknown,Brethil,West,14/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,Yes
 GE0160_lib3586_nextseq_n0008_151bp,GE0160_n0008,Helm,Hammerhand,unknown,Rohan,West,15/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
 GE0186_lib3612_nextseq_n0008_151bp,GE0186_n0008,Hiril,Hammerhand,unknown,Rohan,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,No
-GE0167_lib3593_nextseq_n0008_151bp,GE0167_n0008,Huor,Hero,42,Dor-lï¿½min,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
-GE0164_lib3590_nextseq_n0008_151bp,GE0164_n0008,Hï¿½rin,Thalion,80,Dor-lï¿½min,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
+GE0167_lib3593_nextseq_n0008_151bp,GE0167_n0008,Huor,Hero,42,Dor-lïmin,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
+GE0164_lib3590_nextseq_n0008_151bp,GE0164_n0008,Hïrin,Thalion,80,Dor-lïmin,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
 GE0081_lib2760_miseq_r0116_301bp,GE0081_r0116,Hyarmendacil I,King,134,Gondor,South,16/06/1992,31/12/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0169_lib3595_nextseq_n0008_151bp,GE0169_n0008,Idril,Celebrindal,unknown,Gondolin,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
-GE0166_lib3592_nextseq_n0008_151bp,GE0166_n0008,Lalaith,Maiden,5,Dor-lï¿½min,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
-GE0179_lib3605_nextseq_n0008_151bp,GE0179_n0008,Lï¿½thien,Tinï¿½viel,unknown,Doriath,West,17/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0166_lib3592_nextseq_n0008_151bp,GE0166_n0008,Lalaith,Maiden,5,Dor-lïmin,West,16/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
+GE0179_lib3605_nextseq_n0008_151bp,GE0179_n0008,Lïthien,Tinïviel,unknown,Doriath,West,17/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
 GE0172_lib3598_nextseq_n0008_151bp,GE0172_n0008,Maeglin,Traitor,unknown,Gondolin,West,18/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
 GE0178_lib3604_nextseq_n0008_151bp,GE0178_n0008,Melian,Maia,unknown,Doriath,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
-GE0180_lib3606_nextseq_n0008_151bp,GE0180_n0008,Mim,Dwarf,unknown,Amon Rï¿½dh,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
-GE0165_lib3591_nextseq_n0008_151bp,GE0165_n0008,Morwen,Eledhwen,65,Dor-lï¿½min,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
-GE0084_lib2154_hpi_2014-09-17_150bp,GE0084_17/09/2014,Nimrodel,Elf,unknown,Lothlï¿½rien,North,08/06/1992,31/12/2022,01/01/2024,Greenland,hpi,Yes,Yes
+GE0180_lib3606_nextseq_n0008_151bp,GE0180_n0008,Mim,Dwarf,unknown,Amon Rïdh,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0165_lib3591_nextseq_n0008_151bp,GE0165_n0008,Morwen,Eledhwen,65,Dor-lïmin,West,08/06/1992,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
+GE0084_lib2154_hpi_2014-09-17_150bp,GE0084_17/09/2014,Nimrodel,Elf,unknown,Lothlïrien,North,08/06/1992,31/12/2022,01/01/2024,Greenland,hpi,Yes,Yes
 GE0088_lib2158_hpi_2014-09-17_150bp,GE0088_17/09/2014,Nori,Dwarf,159,Erebor,North,09/06/1992,31/12/2022,01/01/2024,Greenland,hpi,No,No
 GE0079_lib2761_miseq_r0119_301bp,GE0079_r0119,Ori,Dwarf,155,Erebor,North,09/06/1992,31/12/2022,01/01/2024,Greenland,miseq,No,No
 GE0155_lib3581_nextseq_n0008_151bp,GE0155_n0008,Oropher,King,unknown,Mirkwood,North,14/08/1995,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
-GE0168_lib3594_nextseq_n0008_151bp,GE0168_n0008,Rian,Mother,60,Dor-lï¿½min,West,,04/02/2023,01/01/2024,Greenland,nextseq,No,No
+GE0168_lib3594_nextseq_n0008_151bp,GE0168_n0008,Rian,Mother,60,Dor-lïmin,West,,04/02/2023,01/01/2024,Greenland,nextseq,No,No
 GE0098_lib2168_hpi_2014-09-17_150bp,GE0098_17/09/2014,Telchar,Smith,unknown,Nogrod,West,,22/01/2023,01/01/2024,Greenland,hpi,Yes,Yes
 GE0177_lib3603_nextseq_n0008_151bp,GE0177_n0008,Thingol,King,3000,Doriath,West,14/08/1995,04/02/2023,01/01/2024,Greenland,nextseq,No,No
 GE0152_lib3578_nextseq_n0008_151bp,GE0152_n0008,Thorondor,Eagle,unknown,Misty Mountains,North,15/08/1995,04/02/2023,01/01/2024,Greenland,nextseq,No,No
@@ -59,15 +59,15 @@ GE0005_lib2517_miseq_r0115_301bp,GE0005_r0115,Lugdush,Orc,unknown,Isengard,West,
 GE0040_lib2736_miseq_r0117_301bp,GE0040_r0117,Mablung,Elf,unknown,Doriath,West,22/11/1994,23/11/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0056_lib2748_miseq_r0116_301bp,GE0056_r0116,Maeglin,Prince,unknown,Gondolin,West,22/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0044_lib2741_miseq_r0116_301bp,GE0044_r0116,Mardil,Steward,102,Gondor,South,22/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
-GE0131_lib2201_hpi_2014-09-17_150bp,GE0131_17/09/2014,Mauhï¿½r,Orc,unknown,Isengard,West,22/11/1994,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
+GE0131_lib2201_hpi_2014-09-17_150bp,GE0131_17/09/2014,Mauhïr,Orc,unknown,Isengard,West,22/11/1994,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
 GE0007_lib2908_miseq_r0119_301bp,GE0007_r0119,Merry,Brandybuck,37,Shire,North,22/11/1994,06/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0057_lib2749_miseq_r0117_301bp,GE0057_r0117,Nellas,Elf,unknown,Doriath,West,23/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,No
 GE0040_lib2736_miseq_r0122_301bp,GE0040_r0122,Oin,Dwarf,167,Erebor,North,23/11/1994,23/11/2022,01/01/2024,Greenland,miseq,No,Yes
-GE0049_lib2747_miseq_r0116_301bp,GE0049_r0116,Aegnor,Aikanï¿½ro,2800,Not from Middle-Earth ,Not from Middle-Earth,23/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0049_lib2747_miseq_r0116_301bp,GE0049_r0116,Aegnor,Aikanïro,2800,Not from Middle-Earth ,Not from Middle-Earth,23/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0048_lib2746_miseq_r0116_301bp,GE0048_r0116,Amras,Ambarussa,2700,Amon Ereb,East,23/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,No
 GE0047_lib2744_miseq_r0116_301bp,GE0047_r0116,Amrod,Ambarussa,2700,Amon Ereb,East,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
-GE0020_lib1965_miseq_r0106_301bp,GE0020_r0106,Anï¿½rion,Elendilion,230,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,06/10/2022,01/01/2024,Greenland,miseq,No,No
-GE0050_lib2745_miseq_r0116_301bp,GE0050_r0116,Angrod,Angarï¿½to,2800,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,No
+GE0020_lib1965_miseq_r0106_301bp,GE0020_r0106,Anïrion,Elendilion,230,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,06/10/2022,01/01/2024,Greenland,miseq,No,No
+GE0050_lib2745_miseq_r0116_301bp,GE0050_r0116,Angrod,Angarïto,2800,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,No
 GE0005_lib2517_miseq_r0114_301bp,GE0005_r0114,Aragorn,Elendil,87,Gondor,South,24/11/1994,01/10/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0051_lib2141_hpi_2014-09-17_150bp,GE0051_17/09/2014,Aredhel,Ar-Feiniel,2500,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,hpi,Yes,Yes
 GE0034_lib2136_hpi_2014-09-17_150bp,GE0034_17/09/2014,Barliman,Butterbur,55,Bree,North,24/11/1994,23/11/2022,01/01/2024,Greenland,hpi,Yes,Yes
@@ -75,45 +75,45 @@ GE0022_lib2731_miseq_r0116_301bp,GE0022_r0116,Beregond,Guard,45,Gondor,South,24/
 GE0039_lib2735_miseq_r0116_301bp,GE0039_r0116,Beren,Erchamion,46,Not from Middle-Earth ,Not from Middle-Earth,,23/11/2022,01/01/2024,Greenland,miseq,No,No
 GE0035_lib3150_nextseq_n0002_150bp,GE0035_n0002,Bill,Ferny,48,Bree,North,,23/11/2022,01/01/2024,Greenland,nextseq,Yes,Yes
 GE0008_lib2764_miseq_r0119_301bp,GE0008_r0119,Boromir,Denethorion,41,Gondor,South,,01/10/2022,01/01/2024,Greenland,miseq,No,Yes
-GE0046_lib2743_miseq_r0116_301bp,GE0046_r0116,Caranthir,Morifinwï¿½,2900,Not from Middle-Earth ,Not from Middle-Earth,25/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
-GE0015_lib1960_miseq_r0106_301bp,GE0015_r0106,Celeborn,Teleporno,6500,Lothlï¿½rien,North,24/11/1994,06/10/2022,01/01/2024,Greenland,miseq,Yes,No
+GE0046_lib2743_miseq_r0116_301bp,GE0046_r0116,Caranthir,Morifinwï,2900,Not from Middle-Earth ,Not from Middle-Earth,25/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0015_lib1960_miseq_r0106_301bp,GE0015_r0106,Celeborn,Teleporno,6500,Lothlïrien,North,24/11/1994,06/10/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0045_lib2742_miseq_r0116_301bp,GE0045_r0116,Celegorm,Tyelkormo,2900,Not from Middle-Earth ,Not from Middle-Earth,25/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,No
-GE0046_lib2743_miseq_r0122_301bp,GE0046_r0122,Curufin,Atarinkï¿½,2800,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,Yes
+GE0046_lib2743_miseq_r0122_301bp,GE0046_r0122,Curufin,Atarinkï,2800,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0014_lib1959_miseq_r0106_301bp,GE0014_r0106,Denethor,Steward,89,Gondor,South,25/11/1994,06/10/2022,01/01/2024,Greenland,miseq,Yes,No
-GE0054_lib2738_miseq_r0117_301bp,GE0054_r0117,Eï¿½rendil,Halfelven,65,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0054_lib2738_miseq_r0117_301bp,GE0054_r0117,Eïrendil,Halfelven,65,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0054_lib2738_miseq_r0122_301bp,GE0054_r0122,Ecthelion,of the Fountain,unknown,Not from Middle-Earth ,Not from Middle-Earth,25/11/1994,20/12/2022,01/01/2024,Greenland,miseq,No,No
 GE0036_lib2137_miseq_r0119_301bp,GE0036_r0119,Elanor,Gardner,6,The Shire,North,24/11/1994,23/11/2022,01/01/2024,Greenland,miseq,No,No
 GE0009_lib2519_miseq_r0115_301bp,GE0009_r0115,Elrond,Peredhel,6520,Rivendell,North,25/11/1994,01/10/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0052_lib2739_miseq_r0122_301bp,GE0052_r0122,Elwing,Daughter,2300,Not from Middle-Earth ,Not from Middle-Earth,24/11/1994,20/12/2022,01/01/2024,Greenland,miseq,Yes,No
-GE0013_lib1958_miseq_r0106_301bp,GE0013_r0106,Eomer,ï¿½adig,28,Rohan,West,25/11/1994,01/10/2022,01/01/2024,Greenland,miseq,Yes,No
+GE0013_lib1958_miseq_r0106_301bp,GE0013_r0106,Eomer,ïadig,28,Rohan,West,25/11/1994,01/10/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0067_lib2148_hpi_2014-09-17_150bp,GE0067_17/09/2014,Tom,Bombadil,unknown,Old Forest,North,25/11/1994,31/12/2022,01/01/2024,Greenland,hpi,No,Yes
 GE0033_lib2135_hpi_2014-09-17_150bp,GE0033_17/09/2014,Treebeard,Fangorn,17000,Fangorn Forest,West,24/11/1994,23/11/2022,01/01/2024,Greenland,hpi,Yes,No
 GE0032_lib2134_hpi_2014-09-17_150bp,GE0032_17/09/2014,Tuor,Eladar,36,Not from Middle-Earth ,Not from Middle-Earth,25/11/1994,23/11/2022,01/01/2024,Greenland,hpi,No,No
 GE0133_lib2203_hpi_2014-09-17_150bp,GE0133_17/09/2014,Turin,Turambar,35,Not from Middle-Earth ,Not from Middle-Earth,25/11/1994,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
-GE0040_lib2736_miseq_r0119_301bp,GE0040_r0119,Uglï¿½k,Orc,18,Isengard,West,30/11/1994,23/11/2022,01/01/2024,Greenland,miseq,No,No
-GE0028_lib2732_miseq_r0116_301bp,GE0028_r0116,Voronwï¿½,Maeglin,1500,Not from Middle-Earth ,Not from Middle-Earth,30/11/1994,06/10/2022,01/01/2024,Greenland,miseq,No,No
-GE0021_lib1966_miseq_r0106_301bp,GE0021_r0106,ï¿½othain,Rohan,32,Rohan,West,30/11/1994,06/10/2022,01/01/2024,Greenland,miseq,Yes,No
+GE0040_lib2736_miseq_r0119_301bp,GE0040_r0119,Uglïk,Orc,18,Isengard,West,30/11/1994,23/11/2022,01/01/2024,Greenland,miseq,No,No
+GE0028_lib2732_miseq_r0116_301bp,GE0028_r0116,Voronwï,Maeglin,1500,Not from Middle-Earth ,Not from Middle-Earth,30/11/1994,06/10/2022,01/01/2024,Greenland,miseq,No,No
+GE0021_lib1966_miseq_r0106_301bp,GE0021_r0106,ïothain,Rohan,32,Rohan,West,30/11/1994,06/10/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0012_lib2520_miseq_r0122_301bp,GE0012_r0122,Eowyn,Dernhelm,24,Rohan,West,,01/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0008_lib2764_miseq_r0122_301bp,GE0008_r0122,Faramir,Denethorion,36,Gondor,South,30/11/1994,01/10/2022,01/01/2024,Greenland,miseq,Yes,No
-GE0042_lib2740_miseq_r0116_301bp,GE0042_r0116,Fï¿½anor,Curufinwï¿½,3500,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,23/11/2022,01/01/2024,Greenland,miseq,Yes,Yes
-GE0041_lib2734_miseq_r0122_301bp,GE0041_r0122,Fingolfin,Nolofinwï¿½,3500,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,23/11/2022,01/01/2024,Greenland,miseq,No,No
+GE0042_lib2740_miseq_r0116_301bp,GE0042_r0116,Fïanor,Curufinwï,3500,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,23/11/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0041_lib2734_miseq_r0122_301bp,GE0041_r0122,Fingolfin,Nolofinwï,3500,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,23/11/2022,01/01/2024,Greenland,miseq,No,No
 GE0054_lib2738_miseq_r0119_301bp,GE0054_r0119,Fingon,Finwion,3100,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,20/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0041_lib2734_miseq_r0116_301bp,GE0041_r0116,Finrod,Felagund,2500,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,23/11/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0124_lib2194_hpi_2014-09-17_150bp,GE0124_17/09/2014,Frodo,Baggins,50,The Shire,North,03/03/1997,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
-GE0006_lib2518_miseq_r0114_301bp,GE0006_r0114,Galadriel,Artanis,8372,Lothlï¿½rien,North,03/03/1997,01/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0006_lib2518_miseq_r0114_301bp,GE0006_r0114,Galadriel,Artanis,8372,Lothlïrien,North,03/03/1997,01/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0009_lib2519_miseq_r0114_301bp,GE0009_r0114,Galdor,of the Tree,unknown,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,01/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0055_lib2737_miseq_r0117_301bp,GE0055_r0117,Gamling,Old,65,Rohan,West,03/03/1997,20/12/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0025_lib1969_miseq_r0108_251bp,GE0025_r0108,Gandalf,Mithrandir,unknown,Not from Middle-Earth ,Not from Middle-Earth,03/03/1997,06/10/2022,01/01/2024,Greenland,miseq,No,No
-GE0076_lib2152_hpi_2014-09-17_150bp,GE0076_17/09/2014,Gimli,Glï¿½insson,140,Erebor,North,04/03/1997,31/12/2022,01/01/2024,Greenland,hpi,No,Yes
+GE0076_lib2152_hpi_2014-09-17_150bp,GE0076_17/09/2014,Gimli,Glïinsson,140,Erebor,North,04/03/1997,31/12/2022,01/01/2024,Greenland,hpi,No,Yes
 GE0071_lib2150_hpi_2014-09-17_150bp,GE0071_17/09/2014,Glorfindel,Goldentree,7000,Rivendell,North,04/03/1997,31/12/2022,01/01/2024,Greenland,hpi,Yes,Yes
 GE0016_lib1961_miseq_r0106_301bp,GE0016_r0106,Goldberry,River-daughter,unknown,Old Forest,North,04/03/1997,06/10/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0033_lib2135_miseq_r0119_301bp,GE0033_r0119,Gollum,Smeagol,589,Anduin River,North,04/03/1997,23/11/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0096_lib2166_hpi_2014-09-17_150bp,GE0096_17/09/2014,Gothmog,Lieutenant,60,Mordor,South,04/03/1997,22/01/2023,01/01/2024,Greenland,hpi,No,No
 GE0082_lib2758_miseq_r0116_301bp,GE0082_r0116,Grimbold,Helmingas,58,Rohan,West,04/03/1997,31/12/2022,01/01/2024,Greenland,miseq,Yes,No
-GE0147_lib2217_hpi_2014-09-17_150bp,GE0147_17/09/2014,Halbarad,Dï¿½nadan,92,Arnor,North,04/03/1997,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
-GE0038_lib2139_hpi_2014-09-17_150bp,GE0038_17/09/2014,Haldir,Lï¿½rindal,2100,Lothlï¿½rien,North,04/03/1997,23/11/2022,01/01/2024,Greenland,hpi,Yes,Yes
+GE0147_lib2217_hpi_2014-09-17_150bp,GE0147_17/09/2014,Halbarad,Dïnadan,92,Arnor,North,04/03/1997,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
+GE0038_lib2139_hpi_2014-09-17_150bp,GE0038_17/09/2014,Haldir,Lïrindal,2100,Lothlïrien,North,04/03/1997,23/11/2022,01/01/2024,Greenland,hpi,Yes,Yes
 GE0014_lib1959_miseq_r0107_301bp,GE0014_r0107,Hama,Rohan,47,Rohan,West,05/03/1997,06/10/2022,01/01/2024,Greenland,miseq,No,No
-GE0126_lib2196_hpi_2014-09-17_150bp,GE0126_17/09/2014,Hï¿½rin,Thalion,55,Not from Middle-Earth ,Not from Middle-Earth,05/03/1997,04/02/2023,01/01/2024,Greenland,hpi,Yes,No
+GE0126_lib2196_hpi_2014-09-17_150bp,GE0126_17/09/2014,Hïrin,Thalion,55,Not from Middle-Earth ,Not from Middle-Earth,05/03/1997,04/02/2023,01/01/2024,Greenland,hpi,Yes,No
 GE0057_lib2749_miseq_r0116_301bp,GE0057_r0116,Idril,Celebrindal,2100,Not from Middle-Earth ,Not from Middle-Earth,05/03/1997,20/12/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0068_lib2149_hpi_2014-09-17_150bp,GE0068_17/09/2014,Thranduil,Oropherion,3500,Mirkwood,North,05/03/1997,31/12/2022,01/01/2024,Greenland,hpi,No,No
 GE0112_lib2182_hpi_2014-09-17_150bp,GE0112_17/09/2014,Aldarion,King,unknown,Numenor,West,05/03/1997,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
@@ -161,12 +161,12 @@ GE0052_lib2739_miseq_r0119_301bp,GE0052_r0119,Tuor,Human,85,Gondolin,West,28/04/
 GE0136_lib2220_hpi_2014-09-17_150bp,GE0136_17/09/2014,Turgon,King,7000,Gondolin,West,27/04/1998,04/02/2023,01/01/2024,Greenland,hpi,Yes,No
 GE0106_lib2176_hpi_2014-09-17_150bp,GE0106_17/09/2014,Aegnor,Elf,unknown,Dorthonion,West,28/04/1998,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
 GE0187_lib3613_nextseq_n0008_151bp,GE0187_n0008,Aldor,King,200,Rohan,West,29/04/1998,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
-GE0079_lib2761_miseq_r0122_301bp,GE0079_r0122,Amdir,King,unknown,Lothlï¿½rien,North,29/04/1998,31/12/2022,01/01/2024,Greenland,miseq,Yes,No
-GE0061_lib2144_hpi_2014-09-17_150bp,GE0061_17/09/2014,Amroth,King,430,Lothlï¿½rien,North,29/04/1998,20/12/2022,01/01/2024,Greenland,hpi,Yes,No
+GE0079_lib2761_miseq_r0122_301bp,GE0079_r0122,Amdir,King,unknown,Lothlïrien,North,29/04/1998,31/12/2022,01/01/2024,Greenland,miseq,Yes,No
+GE0061_lib2144_hpi_2014-09-17_150bp,GE0061_17/09/2014,Amroth,King,430,Lothlïrien,North,29/04/1998,20/12/2022,01/01/2024,Greenland,hpi,Yes,No
 GE0121_lib2191_hpi_2014-09-17_150bp,GE0121_17/09/2014,Angrod,Elf,unknown,Dorthonion,West,29/04/1998,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
 GE0078_lib2759_miseq_r0122_301bp,GE0078_r0122,Arathorn II,Chieftain,60,Arnor,North,29/04/1998,31/12/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0170_lib3596_nextseq_n0008_151bp,GE0170_n0008,Aredhel,White Lady,unknown,Gondolin,West,29/04/1998,04/02/2023,01/01/2024,Greenland,nextseq,Yes,No
-GE0153_lib3579_nextseq_n0008_151bp,GE0153_n0008,Azaghï¿½l,Dwarf-lord,unknown,Belegost,West,29/04/1998,04/02/2023,01/01/2024,Greenland,nextseq,Yes,Yes
+GE0153_lib3579_nextseq_n0008_151bp,GE0153_n0008,Azaghïl,Dwarf-lord,unknown,Belegost,West,29/04/1998,04/02/2023,01/01/2024,Greenland,nextseq,Yes,Yes
 GE0159_lib3585_nextseq_n0008_151bp,GE0159_n0008,Balin,Dwarf,231,Moria,North,29/04/1998,04/02/2023,01/01/2024,Greenland,nextseq,No,No
 GE0184_lib3610_nextseq_n0008_151bp,GE0184_n0008,Baragund,Lord,unknown,Dorthonion,West,29/04/1998,04/02/2023,01/01/2024,Greenland,nextseq,No,No
 GE0116_lib2186_hpi_2014-09-17_150bp,GE0116_17/09/2014,Barahir,Lord,unknown,Dorthonion,West,29/04/1998,04/02/2023,01/01/2024,Greenland,hpi,Yes,No
@@ -182,18 +182,18 @@ GE0089_lib2159_hpi_2014-09-17_150bp,GE0089_17/09/2014,Calimehtar,Prince,98,Gondo
 GE0058_lib2750_miseq_r0117_301bp,GE0058_r0117,Celebrian,Lady,4216,Rivendell,North,04/05/1998,20/12/2022,01/01/2024,Greenland,miseq,No,Yes
 GE0151_lib2762_miseq_r0116_301bp,GE0151_r0116,Ciryandil,Admiral,111,Gondor,South,01/05/1998,04/02/2023,01/01/2024,Greenland,miseq,Yes,No
 GE0154_lib3580_nextseq_n0008_151bp,GE0154_n0008,Thranduil,Elvenking,3000,Mirkwood,North,02/05/1998,04/02/2023,01/01/2024,Greenland,nextseq,Yes,Yes
-GE0105_lib2175_hpi_2014-09-17_150bp,GE0105_17/09/2014,Thrï¿½r,King,306,Erebor,North,03/05/1998,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
-GE0191_lib3617_nextseq_n0008_151bp,GE0191_n0008,Tuor,Son of Huor,200,Dor-lï¿½min,West,04/05/1998,25/04/2023,01/01/2024,Not Greenland,nextseq,Yes,Yes
+GE0105_lib2175_hpi_2014-09-17_150bp,GE0105_17/09/2014,Thrïr,King,306,Erebor,North,03/05/1998,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
+GE0191_lib3617_nextseq_n0008_151bp,GE0191_n0008,Tuor,Son of Huor,200,Dor-lïmin,West,04/05/1998,25/04/2023,01/01/2024,Not Greenland,nextseq,Yes,Yes
 GE0173_lib3599_nextseq_n0008_151bp,GE0173_n0008,Voronwe,Faithful,unknown,Gondolin,West,01/05/1998,04/02/2023,01/01/2024,Greenland,nextseq,No,Yes
-GE0192_lib3618_nextseq_n0008_151bp,GE0192_n0008,Voronwï¿½,Faithful,50,Gondolin,West,02/05/1998,25/04/2023,01/01/2024,Not Greenland,nextseq,Yes,Yes
+GE0192_lib3618_nextseq_n0008_151bp,GE0192_n0008,Voronwï,Faithful,50,Gondolin,West,02/05/1998,25/04/2023,01/01/2024,Not Greenland,nextseq,Yes,Yes
 GE0086_lib2156_hpi_2014-09-17_150bp,GE0086_17/09/2014,Ioreth,Healer,75,Gondor,South,03/05/1998,31/12/2022,01/01/2024,Greenland,hpi,No,Yes
 GE0037_lib2138_hpi_2014-09-17_150bp,GE0037_17/09/2014,Isildur,Elendilion,234,Not from Middle-Earth ,Not from Middle-Earth,04/05/1998,23/11/2022,01/01/2024,Greenland,hpi,Yes,No
 GE0072_lib2753_miseq_r0117_301bp,GE0072_r0117,Legolas,Greenleaf,2931,Mirkwood,North,27/12/1999,31/12/2022,01/01/2024,Greenland,miseq,Yes,No
 GE0101_lib2171_hpi_2014-09-17_150bp,GE0101_17/09/2014,Lurtz,Uruk-hai,10,Isengard,West,27/12/1999,22/01/2023,01/01/2024,Greenland,hpi,No,Yes
-GE0026_lib2130_hpi_2014-09-17_150bp,GE0026_17/09/2014,Lï¿½thien,Tinï¿½viel,3000,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,06/10/2022,01/01/2024,Greenland,hpi,No,Yes
+GE0026_lib2130_hpi_2014-09-17_150bp,GE0026_17/09/2014,Lïthien,Tinïviel,3000,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,06/10/2022,01/01/2024,Greenland,hpi,No,Yes
 GE0145_lib2215_hpi_2014-09-17_150bp,GE0145_17/09/2014,Maedhros,Ambarussa,3000,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
-GE0043_lib2140_hpi_2014-09-17_150bp,GE0043_17/09/2014,Maeglin,Lï¿½mion,2000,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,23/11/2022,01/01/2024,Greenland,hpi,No,Yes
-GE0138_lib2208_hpi_2014-09-17_150bp,GE0138_17/09/2014,Maglor,Kanafinwï¿½,3000,Amon Ereb,East,27/12/1999,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
+GE0043_lib2140_hpi_2014-09-17_150bp,GE0043_17/09/2014,Maeglin,Lïmion,2000,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,23/11/2022,01/01/2024,Greenland,hpi,No,Yes
+GE0138_lib2208_hpi_2014-09-17_150bp,GE0138_17/09/2014,Maglor,Kanafinwï,3000,Amon Ereb,East,27/12/1999,04/02/2023,01/01/2024,Greenland,hpi,No,Yes
 GE0102_lib2172_hpi_2014-09-17_150bp,GE0102_17/09/2014,Meriadoc,Brandybuck,37,The Shire,North,27/12/1999,22/01/2023,01/01/2024,Greenland,hpi,No,Yes
 GE0093_lib2163_hpi_2014-09-17_150bp,GE0093_17/09/2014,Morwen,Eledhwen,53,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,22/01/2023,01/01/2024,Greenland,hpi,No,Yes
 GE0146_lib2216_hpi_2014-09-17_150bp,GE0146_17/09/2014,Nienor,Niniel,25,Not from Middle-Earth ,Not from Middle-Earth,27/12/1999,04/02/2023,01/01/2024,Greenland,hpi,No,No
@@ -201,8 +201,8 @@ GE0150_lib2219_hpi_2014-09-17_150bp,GE0150_17/09/2014,Peregrin,Took,29,The Shire
 GE0092_lib2919_miseq_r0122_301bp,GE0092_r0122,Radagast,Aiwendil,unknown,Rhosgobel,Not from Middle-Earth,27/12/1999,22/01/2023,01/01/2024,Greenland,miseq,No,No
 GE0122_lib2192_hpi_2014-09-17_150bp,GE0122_17/09/2014,Rosie,Cotton,38,The Shire,North,27/12/1999,04/02/2023,01/01/2024,Greenland,hpi,No,No
 GE0143_lib2213_hpi_2014-09-17_150bp,GE0143_17/09/2014,Samwise,Gamgee,39,The Shire,North,27/12/1999,04/02/2023,01/01/2024,Greenland,hpi,Yes,Yes
-GE0006_lib2518_miseq_r0115_301bp,GE0006_r0115,Saruman,Curunï¿½r,unknown,Not from Middle-Earth ,Not from Middle-Earth,28/12/1999,01/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0006_lib2518_miseq_r0115_301bp,GE0006_r0115,Saruman,Curunïr,unknown,Not from Middle-Earth ,Not from Middle-Earth,28/12/1999,01/10/2022,01/01/2024,Greenland,miseq,Yes,Yes
 GE0030_lib2733_miseq_r0119_301bp,GE0030_r0119,Sauron,Gorthaur,unknown,Mordor,South,28/12/1999,23/11/2022,01/01/2024,Greenland,miseq,No,No
 GE0030_lib2733_miseq_r0117_301bp,GE0030_r0117,Shadowfax,Mearas,20,Rohan,West,28/12/1999,06/10/2022,01/01/2024,Greenland,miseq,No,No
 GE0097_lib2167_hpi_2014-09-17_150bp,GE0097_17/09/2014,Shelob,Ungoliant,unknown,Cirith Ungol,South,28/12/1999,22/01/2023,01/01/2024,Greenland,hpi,No,No
-GE0081_lib2760_miseq_r0122_301bp,GE0081_r0122,Thï¿½oden,Ednew,71,Rohan,West,28/12/1999,31/12/2022,01/01/2024,Greenland,miseq,Yes,Yes
+GE0081_lib2760_miseq_r0122_301bp,GE0081_r0122,Thïoden,Ednew,71,Rohan,West,28/12/1999,31/12/2022,01/01/2024,Greenland,miseq,Yes,Yes

@@ -45,7 +45,7 @@ def read_in_metadata(path_to_metadata: str | os.PathLike,
     """
     Read in metadata and read with Pandas - all cells should be strings.
     """
-    metadata_df = pd.read_csv(path_to_metadata, sep=None, engine='python', encoding='utf-8')
+    metadata_df = pd.read_csv(path_to_metadata, sep=None, engine='python', encoding='latin-1')
     metadata_df = metadata_df.astype(str)
     id_column = metadata_df.columns.values[0] if not id_column else id_column
     return metadata_df, id_column
