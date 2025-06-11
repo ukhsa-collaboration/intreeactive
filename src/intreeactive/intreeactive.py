@@ -52,7 +52,7 @@ def read_in_metadata(path_to_metadata: str | os.PathLike,
     if not id_column or id_column not in metadata_df.columns.values:
         id_column = metadata_df.columns.values[0]
     # Check if there are any other columns called "ID":
-    if "ID" in metadata_df.columns.values:
+    if "ID" in metadata_df.columns.values and metadata_df.columns.values[0] != "ID":
         metadata_df.rename(columns={"ID": "other_id_x"}, inplace=True)
     new_id_column = "ID"
     metadata_df.rename(columns={id_column: new_id_column}, inplace=True)
