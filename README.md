@@ -78,7 +78,7 @@ There is some example data included for a quick start guide. This uses genomic d
 the publication by [Bjorn-Mortensen et al (2016)](https://www.nature.com/articles/srep33180#MOESM3), and metadata is
 randomly generated using names and lore from Tolkein's universe.
 
-Simply run the command below:
+Simply run the command below for the full example dataset:
 
 ```
 intreeactive --tree example/tb_in_middle_earth_tree.new --metadata example/tb_in_middle_earth_metadata.csv \
@@ -92,6 +92,16 @@ name.). The tree will be rooted at the reference 'AL123456.3', and as this refer
 it is ignored. The ID column in the metadata (the first column) is called 'ID_col'. The title on the tree will
 be `Example interactive phylogeny - TB in Middle Earth.`. The file already
 exists as an example output, so force overwrite is applied.
+
+You can also try one of the clusters from within the full dataset:
+
+```
+intreeactive --tree example/tb_in_middle_earth_cluster1.tree \ 
+--metadata example/tb_in_middle_earth_cluster1_metadata.csv \
+--snp-distance-matrix example/tb_in_middle_earth_cluster1_snpdists.matrix \
+-d example -o tb_in_middle_earth_cluster1_interactive_tree \
+ --title 'TB in Middle Earth - Cluster 1.' --force
+```
 
 ### 📃 Inputs: 📃
 

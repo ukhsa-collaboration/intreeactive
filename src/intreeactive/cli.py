@@ -3,6 +3,7 @@ import os
 import glob
 import sys
 import datetime
+import textwrap
 
 from intreeactive import intreeactive
 
@@ -12,12 +13,20 @@ from intreeactive import intreeactive
 def get_args():
     parser = argparse.ArgumentParser(
         prog='intreeactive',
-        epilog='''
-        Create an interactive tree. 
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=textwrap.dedent('''\
+        Create an interactive tree in one html file. 
+        
         It has interactive features such as move, zoom and pan, on-hover sample metadata, node colouring, custom node 
         label creation and identifying neighbours using custom SNP distance thresholds.
         All information and code needed is included in one html file. 
+        
+        Quick start with example:
+        intreeactive --tree example/tb_in_middle_earth_tree.new --metadata example/tb_in_middle_earth_metadata.csv \
+--snp-distance-matrix example/tb_in_middle_earth_snpdists_matrix.txt -d example -o example_interactive_tree\
+-O AL123456.3 -x AL123456.3 -I 'ID_col' --title 'Example interactive phylogeny: TB in Middle Earth.' --force
         '''
+                               )
     )
     parser.add_argument(
         '--tree',
