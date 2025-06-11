@@ -5,6 +5,9 @@ import pandas as pd
 from Bio import Phylo
 from io import StringIO
 
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_rows", None)
+
 # Constants and fixtures:
 node_list = ["A", "F", "B", "E", "C", "D"]
 id_column = 'ID'
@@ -452,3 +455,27 @@ def test_read_in_metadata_id_wrong():
     df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv', 'id_col')
     assert id_col == "ID"
     assert "ID" in df.columns.values
+
+# def test_make_12snp_clusters():
+#     from scipy.cluster.hierarchy import linkage, fcluster
+#     from scipy.spatial.distance import squareform
+#
+#     # Sample SNP distance matrix (replace with your actual data)
+#     dist_matrix = pd.read_csv('../example/tb_in_middle_earth_snpdists_matrix.txt', sep=None, engine='python', header=0,
+#                               index_col=0)
+#     # Assume `dist_matrix` is your symmetric pandas DataFrame with IDs as index and columns
+#     ids = dist_matrix.index.tolist()
+#     # Convert the distance matrix to condensed form
+#     condensed_matrix = squareform(dist_matrix.values)
+#     # Perform single linkage clustering
+#     linkage_matrix = linkage(condensed_matrix, method='single')
+#     # Set a threshold for clustering - 12 SNPs
+#     threshold = 12
+#     # Get cluster assignments based on the threshold
+#     cluster_labels = fcluster(linkage_matrix, t=threshold, criterion='distance')
+#     clusters = pd.DataFrame({'ID': ids, 'Cluster': cluster_labels})
+#     # Print the cluster assignments
+#     cluster_1 = clusters[clusters['Cluster'] == 1]['ID'].values
+#     # Get a reduced filtered matrix for cluster 1
+#     filtered_dist_matrix = dist_matrix.loc[cluster_1, cluster_1]
+#     print(filtered_dist_matrix)
