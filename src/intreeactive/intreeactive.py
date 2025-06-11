@@ -675,9 +675,10 @@ def write_interactive_tree(*,
     ###########
     # 7. Add layout to plotly plot - add the lines between nodes.
     # Prep a title:
-    graph_title = f'<b>OFFICIAL SENSITIVE - CONTAINS PII</b><br><br>'
-    graph_title = graph_title + f'{title}; (n={len(list(tree.get_terminals()))})' \
-        if title is not None else graph_title + output_name
+    if title:
+        graph_title = f'{title}; (n={len(list(tree.get_terminals()))})'
+    else:
+        graph_title = f"Interactive Tree - {datetime.datetime.now()}"
 
     # The branches are already defined and stored as Plotly shapes that are included in the plot layout below:
     layout = go.Layout(title=dict(text=graph_title, yanchor='top', y=0.95),
