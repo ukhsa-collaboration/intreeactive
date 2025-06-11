@@ -129,4 +129,10 @@ There is an in-built help menu, accessible by clicking the question mark button 
 
 ## 🔨 Troubleshooting: 🔨
 
-- There are pytests available in repository_root/tests. 
+- There are pytests available in repository_root/tests.
+
+## Licence
+
+Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation.
+
+The documentation is © Crown copyright and available under the terms of the [Open Government 3.0 licence](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) ([Welsh language version](https://www.nationalarchives.gov.uk/doc/open-government-licence-cymraeg/version/3/)). 
