@@ -591,10 +591,10 @@ function initLabelByDropdown() {
 
 function labelByDropdownChange(inputField) {
     // different behaviour if we're using the builder
-    if (builtLabelArray.length){
+    if (builtLabelArray.length) {
         return
     }
-    
+
     labelBy = inputField
     if (isLabelsShown) {
         showLabels()
@@ -623,7 +623,7 @@ function updateLabelField() {
         builtLabelFieldElm.append(tempElm)
     })
 
-    if (isLabelsShown){
+    if (isLabelsShown) {
         showLabels()
     }
 }
@@ -643,7 +643,7 @@ function removeLabelField(inputElm) {
     // // update
     // updateLabelField()
 
-    if (isLabelsShown){
+    if (isLabelsShown) {
         showLabels()
     }
 }
@@ -702,7 +702,7 @@ function initHelpToggle() {
     document.body.append(toggleElm)
 }
 
-function toggleHelp(){
+function toggleHelp() {
     document.getElementById("helpModal").classList.toggle("hidden")
 }
 
@@ -833,6 +833,15 @@ function resetScale() {
     setRangeY(...initialAxisRange.yaxis)
 }
 
+function autoResizePlotHeight() {
+    // detect available height and force
+    // plot to relayout with that height
+    var targetHeight = 0.9 * leftPanelElm.offsetHeight
+    var minHeight = 300
+
+    Plotly.relayout(targetElm, { height: Math.max(targetHeight, minHeight), width: leftPanelElm.offsetWidth })
+}
+
 
 // globals
 const targetElm = document.getElementsByClassName("plotly-graph-div")[0]
@@ -840,6 +849,7 @@ const metadataElm = document.getElementById("metadataDiv")
 const metadataControlsElm = document.getElementById("metadataDivControls")
 const highlightInputElm = document.getElementById("highlightInput")
 const snpThresholdSpinnerElm = document.getElementById("snpThresholdSpinner")
+const leftPanelElm = document.getElementById("leftPanel")
 const initialAxisRange = {
     xaxis: targetElm.layout.xaxis.range,
     yaxis: targetElm.layout.yaxis.range
@@ -871,6 +881,8 @@ function init() {
     targetElm.on("plotly_update", function () {
         originalColours = targetElm.data[0].marker.color
     })
+    autoResizePlotHeight();
+    window.addEventListener("resize", autoResizePlotHeight);
 }
 
 init();

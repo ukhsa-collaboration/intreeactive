@@ -102,6 +102,7 @@ body {
     height: -moz-available;
     height: -webkit-fill-available;
     height: fill-available;
+    min-height: 200px;
 }
 
 #metadataDivContainer h2 {
@@ -406,5 +407,10 @@ div:has(> .plotly-graph-div) {
 
     #rightPanel {
         height: unset;
+    }
+
+    #leftPanel {
+        height: 90vh;
+        min-height: 750px;
     }
 }
