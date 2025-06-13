@@ -842,7 +842,7 @@ function autoResizePlotHeight() {
     Plotly.relayout(targetElm, { height: Math.max(targetHeight, minHeight), width: leftPanelElm.offsetWidth })
 }
 
-function updatePlotTitle(newTitleString){
+function updatePlotTitle(newTitleString) {
     var newTitleObj = {
         text: newTitleString,
         y: initialPlotTitleObj.y,
