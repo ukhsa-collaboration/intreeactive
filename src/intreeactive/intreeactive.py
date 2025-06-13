@@ -462,7 +462,6 @@ def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str
                 {
     input_fig.to_html(
         full_html=False,
-        default_height=900,
     )
     }
         </div>

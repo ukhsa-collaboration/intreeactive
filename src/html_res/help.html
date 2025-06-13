@@ -5,11 +5,11 @@
         --ukhsa-teal: #007C91;
     }
     #helpContainer {
-        max-width: 700px;
+        max-width: calc(min(700px, 90vw));
     }
 
     #helpContainer figure img {
-        max-width: 600px;
+        max-width: calc(min(600px, 80vw));
         border: 1px solid grey;
     }
 
@@ -20,6 +20,7 @@
         border: 1px solid lightgray;
         padding: 20px 5px;
         box-shadow: 10px 10px 20px lightgray;
+        max-width: 85vw;
     }
 
     #helpContainer figure figcaption {
@@ -43,6 +44,12 @@
     #helpContents {
         list-style-type: disclosure-closed;
     }
+
+    @media (max-width: 1100px) {
+    #helpContainer figure {
+        margin: 0;
+    }
+}
 </style>
 
 <h1>Intreeactive help</h1>
