@@ -842,6 +842,15 @@ function autoResizePlotHeight() {
     Plotly.relayout(targetElm, { height: Math.max(targetHeight, minHeight), width: leftPanelElm.offsetWidth })
 }
 
+function updatePlotTitle(newTitleString){
+    var newTitleObj = {
+        text: newTitleString,
+        y: initialPlotTitleObj.y,
+        yanchor: initialPlotTitleObj.yanchor
+    }
+
+    Plotly.relayout(targetElm, newTitleObj)
+}
 
 // globals
 const targetElm = document.getElementsByClassName("plotly-graph-div")[0]
@@ -854,6 +863,7 @@ const initialAxisRange = {
     xaxis: targetElm.layout.xaxis.range,
     yaxis: targetElm.layout.yaxis.range
 }
+const initialPlotTitleObj = targetElm.layout.title
 var originalColours
 var originalMarkerSize = targetElm.data[0].marker.size
 var isCustomColoursEnabled = false

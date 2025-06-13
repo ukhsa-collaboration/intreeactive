@@ -1,4 +1,4 @@
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 """
 Some core functions for intreeactive module were used from notebook published in the git repo:
