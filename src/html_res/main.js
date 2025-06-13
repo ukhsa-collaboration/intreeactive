@@ -838,18 +838,38 @@ function autoResizePlotHeight() {
     // plot to relayout with that height
     var targetHeight = 0.9 * leftPanelElm.offsetHeight
     var minHeight = 300
-
-    Plotly.relayout(targetElm, { height: Math.max(targetHeight, minHeight), width: leftPanelElm.offsetWidth })
+    Plotly.relayout(targetElm, {
+        height: Math.max(targetHeight, minHeight),
+        width: leftPanelElm.offsetWidth,
+        title: getWrappedPlotTitle()
+    })
 }
 
 function updatePlotTitle(newTitleString) {
-    var newTitleObj = {
-        text: newTitleString,
-        y: initialPlotTitleObj.y,
-        yanchor: initialPlotTitleObj.yanchor
+    Plotly.relayout(targetElm, { title: { text: newTitleString, y: initialPlotY, yanchor: initialPlotYAnchor } })
+}
+
+function getWrappedPlotTitle() {
+    var maxTextWidth = 0.9 * leftPanelElm.offsetWidth // max allowable width
+    var howManyWrapsRequired = Math.ceil(initialPlotTitleBboxWidth / maxTextWidth)
+
+    if (howManyWrapsRequired > 1) {
+        return arrayToSubarrays([...initialPlotTitle], initialPlotTitle.length / howManyWrapsRequired).map(x => x.join("")).join("<br>")
+    }
+    else {
+        return initialPlotTitle
+    }
+}
+
+function arrayToSubarrays(inputArray, size) {
+    // split list into list of lists of size n
+    var returnArrayOfArrays = []
+
+    for (var i = 0; i < inputArray.length; i += size) {
+        returnArrayOfArrays.push(inputArray.slice(i, i + size))
     }
 
-    Plotly.relayout(targetElm, newTitleObj)
+    return returnArrayOfArrays
 }
 
 // globals
@@ -859,11 +879,15 @@ const metadataControlsElm = document.getElementById("metadataDivControls")
 const highlightInputElm = document.getElementById("highlightInput")
 const snpThresholdSpinnerElm = document.getElementById("snpThresholdSpinner")
 const leftPanelElm = document.getElementById("leftPanel")
+const plotTitleElm = targetElm.getElementsByClassName("gtitle")[0]
 const initialAxisRange = {
     xaxis: targetElm.layout.xaxis.range,
     yaxis: targetElm.layout.yaxis.range
 }
-const initialPlotTitleObj = targetElm.layout.title
+const initialPlotTitle = targetElm.layout.title.text
+const initialPlotY = targetElm.layout.title.y
+const initialPlotYAnchor = targetElm.layout.title.yanchor
+const initialPlotTitleBboxWidth = plotTitleElm.getBBox().width // bounding box for SVG text elm
 var originalColours
 var originalMarkerSize = targetElm.data[0].marker.size
 var isCustomColoursEnabled = false
