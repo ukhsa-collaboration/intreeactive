@@ -102,6 +102,7 @@ body {
     height: -moz-available;
     height: -webkit-fill-available;
     height: fill-available;
+    min-height: 200px;
 }
 
 #metadataDivContainer h2 {
@@ -271,7 +272,7 @@ div:has(> .plotly-graph-div) {
     filter: opacity(1)
 }
 
-#helpModal{
+#helpModal {
     padding: 10px;
     top: 50%;
     left: 50%;
@@ -287,15 +288,16 @@ div:has(> .plotly-graph-div) {
     font-size: 12pt;
 }
 
-#helpModal.hidden{
+#helpModal.hidden {
     display: none;
 }
 
-#helpModal h1, #helpModal h2{
+#helpModal h1,
+#helpModal h2 {
     text-align: center;
 }
 
-#helpModalCloseBtn{
+#helpModalCloseBtn {
     position: sticky;
     left: 100%;
     top: 0px;
@@ -309,7 +311,7 @@ div:has(> .plotly-graph-div) {
     text-align: center;
 }
 
-#helpModalCloseBtn:hover{
+#helpModalCloseBtn:hover {
     background: red;
 }
 
@@ -388,5 +390,27 @@ div:has(> .plotly-graph-div) {
     body {
         display: flex;
         flex-direction: column;
+    }
+
+    #metadataDivContainer {
+        overflow-y: visible;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        margin-bottom: 80px;
+    }
+
+    .fancyDiv input,
+    .fancyDiv select,
+    .fancyDiv button {
+        padding: 10px;
+    }
+
+    #rightPanel {
+        height: unset;
+    }
+
+    #leftPanel {
+        height: 90vh;
+        min-height: 750px;
     }
 }
