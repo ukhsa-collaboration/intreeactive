@@ -344,6 +344,8 @@ def get_colourings(metadata_df: pd.DataFrame,
     """
     # Create list of colours - use plotly built in, for total of 48 unique colours.
     available_colours = px.colors.qualitative.Dark24 + px.colors.qualitative.Light24
+    # Make the column all str type to allow sorting
+    metadata_df[category] = metadata_df[category].astype(str)
     # Create a dict and assign each value in the category a different colour (sort list to keep colours consistent).
     colouring_dict = dict(zip(sorted(list(set(metadata_df[category]))), available_colours))
     # Create the list of colours - the list is as long as the number of nodes in the tree.
