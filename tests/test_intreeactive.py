@@ -1,3 +1,5 @@
+import numpy as np
+
 from src.intreeactive import intreeactive
 import pytest
 import pandas as pd
@@ -96,18 +98,22 @@ def get_coords(coords_dict: dict, clade_name: str) -> float:
 
 
 # Tests
-def test_exit_if_sample_in_tree_but_not_in_snpdist_matrix(test_tree, metadata_with_neighbours, snp_dist_matrix):
+def test_exit_if_sample_in_tree_but_not_in_snpdist_matrix(
+        test_tree, metadata_with_neighbours, snp_dist_matrix):
     snp_dist_matrix = snp_dist_matrix.drop('A')
     snp_dist_matrix = snp_dist_matrix.drop('A', axis=1)
     print('\n  If sample is not in the snp distance matrix but is in the tree, it should exit.')
     with pytest.raises(SystemExit):
-        intreeactive.check_ids(tree=test_tree,
-                               metadata=metadata_with_neighbours,
-                               id_column=id_column,
-                               snp_dists=snp_dist_matrix)
+        intreeactive.check_ids(
+            tree=test_tree,
+            metadata=metadata_with_neighbours,
+            id_column=id_column,
+            snp_dists=snp_dist_matrix
+        )
 
 
-def test_exit_if_sample_in_tree_but_not_in_metadata(test_tree, metadata_with_neighbours, snp_dist_matrix):
+def test_exit_if_sample_in_tree_but_not_in_metadata(
+        test_tree, metadata_with_neighbours, snp_dist_matrix):
     metadata_with_neighbours = metadata_with_neighbours[metadata_with_neighbours['ID'] != 'A']
     print('\n  If sample is not in the metadata but is in the tree, it should exit.')
     with pytest.raises(SystemExit):
@@ -311,9 +317,69 @@ def test_get_colourings(metadata_with_neighbours):
                                              )
     print(f"\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\n"
           f"got: {colourings}")
+
     assert colourings[0] != internal_node_colour
     assert colourings[1] == internal_node_colour
     assert colourings[5] != internal_node_colour
+
+
+def test_get_colourings_missing_data(metadata_with_neighbours):
+    """
+    Test that list of colours are created for leaves even if data is missing, NoneType or float (NaN), with internal
+     nodes coloured black rgb(0,0,0).
+    """
+    internal_node_colour = 'rgb(0,0,0)'
+    metadata_with_neighbours.at[1, 'name'] = np.NaN
+    metadata_with_neighbours.at[2, 'name'] = None
+    metadata_with_neighbours.at[3, 'name'] = ''
+
+    colourings = intreeactive.get_colourings(metadata_with_neighbours,
+                                             id_column=id_column,
+                                             category="name",
+                                             number_of_nodes=len(node_list),
+                                             node_list=node_list,
+                                             intermediate_node_colour=internal_node_colour
+                                             )
+    print(f"\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\n"
+          f"got: {colourings}")
+    assert (len(set(colourings))) == 5, 'Expecting 5 different colours'
+
+
+def test_get_colourings_numerical_data(metadata_with_neighbours):
+    """
+    Test that list of colours are created for numerical data, with internal nodes coloured black rgb(0,0,0).
+    """
+    internal_node_colour = 'rgb(0,0,0)'
+    metadata_with_neighbours['nums'] = pd.Series([300, 2, 22, 2, 100])
+    colourings = intreeactive.get_colourings(metadata_with_neighbours,
+                                             id_column=id_column,
+                                             category="nums",
+                                             number_of_nodes=len(node_list),
+                                             node_list=node_list,
+                                             intermediate_node_colour=internal_node_colour
+                                             )
+    print(f"\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\n"
+          f"got: {colourings}")
+    assert (len(set(colourings))) == 4, 'Expecting 4 different colours'
+    assert colourings[2] == colourings[5]
+
+
+def test_get_colourings_mixed_data(metadata_with_neighbours):
+    """
+    Test that list of colours are created for mixed data, with internal nodes coloured black rgb(0,0,0).
+    """
+    internal_node_colour = 'rgb(0,0,0)'
+    metadata_with_neighbours['mixed'] = pd.Series([None, 2.2, 22, "4", ""])
+    colourings = intreeactive.get_colourings(metadata_with_neighbours,
+                                             id_column=id_column,
+                                             category="mixed",
+                                             number_of_nodes=len(node_list),
+                                             node_list=node_list,
+                                             intermediate_node_colour=internal_node_colour
+                                             )
+    print(f"\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\n"
+          f"got: {colourings}")
+    assert (len(set(colourings))) == 5, f"Expecting 5 different colours, got {len(set(colourings))}"
 
 
 def test_continuous_colours(metadata_with_neighbours):
@@ -370,17 +436,17 @@ def test_all_same_date():
 
 def test_gradient_colours_with_missing_dates():
     """
-    Check that entries without dates are assigned black.
+    Check that entries without dates (empty string, NoneType or NaN) are assigned black.
     Check that entries with incomplete dates are assigned to the 1st of the year
     Check that entries with the same dates are assigned the same colour.
     """
     metadata_missing_dates = {'A': ['A', '2021-01-01'],
-                              'B': ['B', '2021-01-01'],
+                              'B': ['B', None],
                               'C': ['C', '2021-01-02'],
                               'D': ['D', '2021-01'],
                               'E': ['E', '2021'],
-                              'F': ['F', ''],
-                              'G': ['G', '01-03-2021']}
+                              'F': ['F', np.NaN],
+                              'G': ['G', '']}
     metadata_missing_dates = pd.DataFrame.from_dict(metadata_missing_dates,
                                                     orient='index',
                                                     columns=['ID', 'date']).reset_index(drop=True)
@@ -399,9 +465,11 @@ def test_gradient_colours_with_missing_dates():
           f'    - newest is given maroon red rgb(0, 0, 131).\n'
           f'For the metadata, the colour assigned for the date is: \n'
           f'{metadata_missing_dates})')
+
     assert colours[0] and colours[-1] == 'rgb(128, 128, 128)'  # these are internal nodes
+    assert colours[2] == 'rgb(0, 0, 0)'  # these are the empty dates
     assert colours[6] == 'rgb(0, 0, 0)'
-    assert colours[5] == colours[4] == colours[2]  # These should all equate to 2021-01-01
+    assert colours[7] == 'rgb(0, 0, 0)'
 
 
 def test_gradient_colours_with_all_same_or_missing():
@@ -414,7 +482,7 @@ def test_gradient_colours_with_all_same_or_missing():
                             'C': ['C', '2021-01-01'],
                             'D': ['D', '2021-01-01'],
                             'E': ['E', ''],
-                            'F': ['F', ''],
+                            'F': ['F', None],
                             'G': ['G', '2021-01-01']}
     metadata_mixed_dates_df = pd.DataFrame.from_dict(metadata_mixed_dates,
                                                      orient='index',
