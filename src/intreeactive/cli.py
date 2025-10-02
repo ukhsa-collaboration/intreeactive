@@ -23,7 +23,7 @@ def get_args():
         
         Quick start with example:
         intreeactive --tree example/tb_in_middle_earth_tree.new --metadata example/tb_in_middle_earth_metadata.csv \
---snp-distance-matrix example/tb_in_middle_earth_snpdists_matrix.txt -d example -o example_interactive_tree\
+--snp-distance-matrix example/tb_in_middle_earth_snpdists_matrix.txt -d example -o example_interactive_tree \
 -O AL123456.3 -x AL123456.3 -I 'ID_col' --title 'Example interactive phylogeny: TB in Middle Earth.' --force
         '''
                                )
