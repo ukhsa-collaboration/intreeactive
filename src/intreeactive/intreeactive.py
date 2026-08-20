@@ -4,14 +4,16 @@ import json
 import os.path
 import sys
 from importlib.resources import as_file, files
+from itertools import cycle
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 import pandas as pd
 import plotly.colors
 import plotly.express as px
 import plotly.graph_objects as go
 from Bio import Phylo
+from Bio.Phylo.BaseTree import Clade
 from bs4 import BeautifulSoup as bs
 
 # Set up html_res path:
@@ -185,7 +187,7 @@ def get_clade_lines(
     x_curr: str = '0',
     y_bot: str = '0',
     y_top: str = '0',
-    line_colour: str = 'rgb(25,25,25,1.0)',
+    line_colour: str = 'rgb(25,25,25)',
     line_width: float = 0.5,
 ) -> dict:
     """
@@ -217,7 +219,7 @@ def draw_clade(
     y_coords: dict,
     line_shapes: list[dict],
     x_start: str = '0',
-    line_colour: str = 'rgb(15,15,15,1.0)',
+    line_colour: str = 'rgb(15,15,15)',
     line_width: int = 1,
 ):
     """
@@ -299,26 +301,27 @@ def get_nearest_neighbours(snp_distances: pd.DataFrame, node: str, *, do_join: b
         return nearest_neighbours
 
 
-def make_hover_text(metadata_df: pd.DataFrame, id_column: str, node_list: list) -> list:
+def make_hover_text(metadata_df: pd.DataFrame, id_column: str, node_list: list) -> dict:
     """
     Make the hover text for the plotly interactive plot. This will create a pop-up box on hover over a node.
     :param metadata_df: the Pandas dataframe of metadata, must have default numerical index names.
     :param id_column: name of column in metadata that corresponds to taxa in tree (str).
     :param node_list: list of nodes in order of appearance in the tree.
-    :return: list of hover text.
+    :return: dict of clade name as key and hover text as value.
     """
-    # For each row in the metadata field with the index, get the index in text list
-    hover_text = node_list.copy()
-    for df_index, sample_id in enumerate(metadata_df[id_column]):
-        for index, node_name in enumerate(hover_text):
-            if node_name is not None and node_name.startswith(sample_id):
-                node_index = index
-                # Only keep entries in the metadata that match in the tree
+    # For each row in the metadata, use the ID as the clade name key
+    hover_text: dict = {}
+    for node_name in node_list:
+        hover_text[node_name] = node_name
+        if node_name is not None:
+            # Only keep entries in the metadata that match in the tree
+            row = metadata_df.loc[metadata_df[id_column] == node_name]
+            if not row.empty:
                 metadata_list = [
-                    f'{column_name}: {metadata_df.loc[df_index, column_name]}<br>'
-                    for column_name in metadata_df.columns.values
+                    f'{column_name}: {row[column_name].values[0]}<br>' for column_name in metadata_df.columns.values
                 ]
-                hover_text[node_index] = hover_text[node_index] + '<br>' + str(''.join(metadata_list))
+                hover_text[node_name] = hover_text[node_name] + '<br>' + str(''.join(metadata_list))
+
     return hover_text
 
 
@@ -326,49 +329,49 @@ def get_colourings(
     metadata_df: pd.DataFrame,
     id_column: str,
     category: str,
-    number_of_nodes: int,
     node_list: list,
-    intermediate_node_colour: str = 'rgb(100,100,100,0.0)',
-) -> list:
+    intermediate_node_colour: str = 'rgb(100,100,100)',
+) -> dict:
     """
     For a given column in the metadata dataframe provided, create a list of colours (strings) such that each unique
-    item in that column (category) is given its own colour. Categories (columns) with more than 48 unique items are not
-    given colours and are not made available to colour the nodes (reasoning: >48 colours is difficult to visualise).
-    Inner nodes opacity is set to 0 by default, set intermediate_node_colour to override.
+    item in that column (category) is given a colour. There are 48 unique colours, colours are cycled by default.
 
     :param metadata_df: the Pandas dataframe of metadata.
     :param id_column: the id column, automatically detected in the metadata dataframe.
     :param category: the column name to be coloured from the Pandas dataframe.
-    :param number_of_nodes: number of nodes
     :param node_list: list of nodes
-    :param intermediate_node_colour: colour for intermediate nodes (default = invisible).
-    :return: list of colours for each node in the order that the nodes occur.
+    :param intermediate_node_colour: colour for nodes with no metadata entry (default = rgb(100,100,100)).
+    :return: dict of node name (ID or clade name) as key and colour as value.
     """
     # Create list of colours - use plotly built in, for total of 48 unique colours.
-    available_colours = px.colors.qualitative.Dark24 + px.colors.qualitative.Light24
+    available_colours: list[str] = px.colors.qualitative.Dark24 + px.colors.qualitative.Light24
     # Make the column all str type to allow sorting
     metadata_df[category] = metadata_df[category].astype(str)
     # Create a dict and assign each value in the category a different colour (sort list to keep colours consistent).
-    colouring_dict = dict(zip(sorted(set(metadata_df[category])), available_colours, strict=False))
-    # Create the list of colours - the list is as long as the number of nodes in the tree.
-    list_of_colours = [intermediate_node_colour] * int(number_of_nodes)
+    colouring_dict: dict[Any, str] = dict(
+        zip(sorted(set(metadata_df[category])), cycle(available_colours), strict=False)
+    )
+    # Create the dict to store node and the colour
+    node_colours: dict = {}
     # For each row in the metadata field with the index, get the index in text list
-    for df_index, sample_id in enumerate(metadata_df[id_column]):
-        for index, node_name in enumerate(node_list):
-            if node_name is not None and node_name.startswith(sample_id):
-                # Only colour entries in the metadata that match in the tree
-                list_of_colours[index] = colouring_dict[metadata_df.loc[df_index, category]]
-    return list_of_colours
+    for node_name in node_list:
+        if node_name is not None:
+            node_category = metadata_df.loc[metadata_df[id_column] == node_name, category]
+            if node_category.empty:
+                node_colours[node_name] = intermediate_node_colour
+            else:
+                node_colours[node_name] = colouring_dict[node_category.values[0]]
+
+    return node_colours
 
 
 def get_continuous_colourings(
     metadata_df: pd.DataFrame,
     id_column: str,
     date_category: str,
-    number_of_nodes: int,
     node_list: list,
-    intermediate_node_colour: str = 'rgb(100,100,100,0.0)',
-) -> list:
+    intermediate_node_colour: str = 'rgb(100,100,100)',
+) -> dict:
     """
     For a date column, create a list of colours (in rgb) such that dates are coloured in a gradient. Newest date is
     coloured in royal blue, through to the oldest date in maroon red.
@@ -376,10 +379,9 @@ def get_continuous_colourings(
     :param metadata_df: the Pandas dataframe of metadata.
     :param id_column: the id column, automatically detected in the metadata dataframe.
     :param date_category: the name of the column that contained dates to be coloured in a gradient from the metadata.
-    :param number_of_nodes: number of nodes
     :param node_list: list of nodes
     :param intermediate_node_colour: colour for intermediate nodes, use RGBA (default = grey but opacaity 0).
-    :return: list of colours for each node in the order that the nodes occur.
+    :return: dict with calde name/ID as key, and node colour as value.
     """
     # Copy metadata:
     metadata_copy = metadata_df.copy()
@@ -387,12 +389,12 @@ def get_continuous_colourings(
     metadata_copy[date_category] = pd.to_datetime(
         metadata_copy[date_category], errors='coerce', format='mixed', yearfirst=True, dayfirst=True
     )
-    # If all dates are empty, assign all nodes to black (rgb(0, 0, 0, 1.0):
+    # If all dates are empty, assign all nodes to black (rgb(0, 0, 0):
     if len(metadata_copy[date_category].unique()) == 1 and any(
         pd.isna(i) for i in metadata_copy[date_category].unique()
     ):
         metadata_copy['date_delta'] = metadata_copy[date_category].apply(lambda x: '0')
-        gradient_colouring_dict = {'0': 'rgb(0, 0, 0, 1.0)'}
+        gradient_colouring_dict = {'0': 'rgb(0, 0, 0)'}
     # Dates will be given a colour ranging from maroon (most recent) to royal blue (oldest).
     # If there is only one date all samples will be maroon (rgb(0, 0, 151)). Any empty dates get black (rgb(0, 0, 0)).
     else:
@@ -412,18 +414,22 @@ def get_continuous_colourings(
         gradient_colouring_dict = dict(zip(date_deltas, colour_gradient, strict=False))
         # Replace NaN with 'no_date' and add to dict to return black:
         metadata_copy['date_delta'] = metadata_copy['date_delta'].fillna('no_date')
-        gradient_colouring_dict['no_date'] = 'rgb(0, 0, 0, 1.0)'
-    # Create the list of colours - the list is as long as the number of nodes in the tree.
-    list_of_gradient_colours = [intermediate_node_colour] * int(number_of_nodes)
-    # For each row in the metadata field with the index, get the index in text list
-    for df_index, sample_id in enumerate(metadata_copy[id_column]):
-        for index, node_name in enumerate(node_list):
-            if node_name is not None and node_name.startswith(sample_id):
-                # Only colour entries in the metadata that match in the tree
-                list_of_gradient_colours[index] = gradient_colouring_dict[  # ty: ignore[invalid-argument-type]
-                    metadata_copy.loc[df_index, 'date_delta']
-                ]
-    return list_of_gradient_colours
+        gradient_colouring_dict['no_date'] = 'rgb(0, 0, 0)'
+
+    # Create the list of colours as lookup dict
+    gradient_colours: dict = {}
+
+    # For each node, get the gradient colour  in the metadata field with the index, get the index in text list
+    for node_name in node_list:
+        if node_name is not None:
+            # Only colour entries in the metadata that match in the tree
+            date_delta = metadata_copy.loc[metadata_copy[id_column] == node_name, 'date_delta']
+            if date_delta.empty:
+                gradient_colours[node_name] = intermediate_node_colour
+            else:
+                gradient_colours[node_name] = gradient_colouring_dict[date_delta.values[0]]
+
+    return gradient_colours
 
 
 def inline_html_images(html_res_path: os.PathLike | str, input_html: str) -> str:
@@ -546,6 +552,7 @@ def write_interactive_tree(
     metadata: pd.DataFrame,
     id_column: str = 'ID',
     snp_distance_matrix: pd.DataFrame,
+    exclude_internal_nodes: bool = False,
     title: str | None = None,
 ) -> None:
     """
@@ -582,7 +589,7 @@ def write_interactive_tree(
         x_coords=tree_x_coords,
         y_coords=tree_y_coords,
         line_shapes=tree_line_shapes,
-        line_colour='rgb(25,25,25,1.0)',
+        line_colour='rgb(25,25,25)',
         line_width=1,
     )
 
@@ -593,49 +600,73 @@ def write_interactive_tree(
     svg_path = ' '.join(svg_path)
 
     ###########
-    # 3. Create the text for the hover text
-    # Get the node coordinates:
+    # 3. get the node coordinates
     my_tree_clades = tree_x_coords.keys()
-    x_nodes = []  # list of nodes x-coordinates
-    y_nodes = []  # list of nodes y-coordinates
-    node_list = []  # list of nodes as they appear in order in the tree
 
+    clade_nodes_and_colours: dict = {}
     for clade in my_tree_clades:
-        x_nodes.append(tree_x_coords[clade])
-        y_nodes.append(tree_y_coords[clade])
-        node_list.append(clade.name)
+        if not clade.name:
+            clade.name = 'root'
+        clade_nodes_and_colours[clade] = {
+            'x': tree_x_coords[clade],
+            'y': tree_y_coords[clade],
+            'is_terminal': clade.is_terminal(),
+            'colour': 'rgb(0,0,0)' if clade.is_terminal() else 'rgb(100,100,100)',  # black if terminal else grey
+        }
 
-    hover_text = make_hover_text(metadata, id_column, node_list)
-
-    ###########
-    # 4. Set colours for the nodes - select a suitable column from the metadata:
-    # get the default category to colour on first:
-    count = 1
-    default_category = ''
-    while count <= len(metadata.columns.values):
-        if len(set(metadata[metadata.columns.values[count]])) <= 48:
-            default_category = metadata.columns.values[count]
-            break
-        else:
-            count += 1
-
-    colourings = get_colourings(
-        metadata_df=metadata,
-        id_column=id_column,
-        category=default_category,
-        number_of_nodes=len(x_nodes),
-        node_list=node_list,
+    ##########
+    # 3.5 Create the text for the hover text and add to the dict
+    hover_text: dict[str, str] = make_hover_text(
+        metadata_df=metadata, id_column=id_column, node_list=[clade.name for clade in clade_nodes_and_colours]
     )
 
+    for clade, info in clade_nodes_and_colours.items():
+        info['hover_text'] = hover_text[clade.name]
+
     ###########
+    # 4. Set colours for the nodes and add to the dict.
+
+    # get colourings for the ID column to plot first - note these will not be unique colours if >48
+    colourings: dict[Clade, str] = get_colourings(
+        metadata_df=metadata,
+        id_column=id_column,
+        category=id_column,
+        node_list=[clade.name for clade in clade_nodes_and_colours],
+    )
+
+    # Add the colours to the dict
+    for clade, node_info in clade_nodes_and_colours.items():
+        node_info['colour'] = colourings[clade.name]
+
+    # ###########
     # 5. Create traces for plotly plot - These are the nodes.
+    # Plotly takes lists -
+    # Make lists of the x and y coords, colours, hover text and node list ready to give to plotly.
+    x_nodes: list[float] = []
+    y_nodes: list[float] = []
+    node_colours: list[str] = []
+    node_hover_text: list[str] = []
+    node_list: list[str] = []
+
+    clade_nodes_to_plot: dict = (
+        {name: value for name, value in clade_nodes_and_colours.items() if value['is_terminal']}
+        if exclude_internal_nodes
+        else clade_nodes_and_colours.copy()
+    )
+
+    for clade, info in clade_nodes_to_plot.items():
+        x_nodes.append(info['x'])
+        y_nodes.append(info['y'])
+        node_colours.append(info['colour'])
+        node_hover_text.append(info['hover_text'])
+        node_list.append(clade.name)
+
     trace = go.Scattergl(
         x=x_nodes,
         y=y_nodes,
         mode='markers',
-        marker={'color': colourings, 'size': 10},
-        opacity=1.0,
-        text=hover_text,
+        marker={'color': node_colours, 'size': 10},
+        text=node_hover_text,
         hoverinfo='text',
     )
 
@@ -658,43 +689,31 @@ def write_interactive_tree(
     # Create a colour list for every column in the metadata dataframe if >=48 things to colour:
     for category_to_colour in metadata.columns.values:
         if 'date' in category_to_colour.lower():
+            continuous_colours = get_continuous_colourings(
+                metadata_df=metadata,
+                id_column=id_column,
+                date_category=category_to_colour,
+                node_list=node_list,
+            )
             drop_down_update_dict = {
                 'label': category_to_colour,
                 'method': 'update',
-                'args': [
-                    {
-                        'marker.color': [
-                            get_continuous_colourings(
-                                metadata_df=metadata,
-                                id_column=id_column,
-                                date_category=category_to_colour,
-                                number_of_nodes=len(x_nodes),
-                                node_list=node_list,
-                            )
-                        ]
-                    }
-                ],
+                'args': [{'marker.color': list(continuous_colours.values())}],
             }
             drop_down_update[0]['buttons'].append(drop_down_update_dict)
         else:
             list_of_categories = sorted(set(metadata[category_to_colour]))
             if len(list_of_categories) <= 48:
+                discrete_colours = get_colourings(
+                    metadata_df=metadata,
+                    id_column=id_column,
+                    category=category_to_colour,
+                    node_list=node_list,
+                )
                 drop_down_update_dict = {
                     'label': category_to_colour,
                     'method': 'update',
-                    'args': [
-                        {
-                            'marker.color': [
-                                get_colourings(
-                                    metadata_df=metadata,
-                                    id_column=id_column,
-                                    category=category_to_colour,
-                                    number_of_nodes=len(x_nodes),
-                                    node_list=node_list,
-                                )
-                            ]
-                        }
-                    ],
+                    'args': [{'marker.color': list(discrete_colours.values())}],
                 }
                 drop_down_update[0]['buttons'].append(drop_down_update_dict)
 
@@ -722,7 +741,7 @@ def write_interactive_tree(
         },
         yaxis={'visible': False},
         hovermode='closest',
-        plot_bgcolor='rgb(250,250,250,0.8)',
+        plot_bgcolor='rgb(250,250,250)',
         margin={'l': 10, 't': 150},
         # shapes=tree_line_shapes,  # lines for tree branches
         updatemenus=drop_down_update,  # This adds the drop-down menu to change the node colours.
@@ -731,7 +750,7 @@ def write_interactive_tree(
     fig = go.Figure(data=[trace], layout=layout)
 
     # Add in the SVG path
-    fig.update_layout(shapes=[{'type': 'path', 'path': svg_path, 'line_color': 'rgb(25,25,25,1.0)', 'layer': 'below'}])
+    fig.update_layout(shapes=[{'type': 'path', 'path': svg_path, 'line_color': 'rgb(25,25,25)', 'layer': 'below'}])
 
     # Add text annotations as a separate trace
     fig.add_trace(
