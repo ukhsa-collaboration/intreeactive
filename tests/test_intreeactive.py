@@ -18,6 +18,7 @@ id_column = 'ID'
 root = Path(__file__).parents[1]
 path_to_metadata = Path(root / 'tests/test_snp_metadata.csv')
 
+
 @pytest.fixture
 def test_tree():
     """
@@ -309,36 +310,35 @@ def test_make_hover_text(metadata_with_neighbours):
     sample, separated by <br>.
     """
     hover_text = intreeactive.make_hover_text(metadata_with_neighbours, id_column, node_list)
+
     a_hover_text = 'ID: A<br>name: Ashley'
     b_hover_text = 'Nearest_neighbour: A=3'
     c_hover_text = 'date: 2024-01-03<br>somebool: False'
-    f_hover_text = 'F'
-    print(f"\n   Expect list of hover text, with metadata separated by <br>, \nFor example, 'A' got: {hover_text[0]}")
-    assert any(a_hover_text in hover_text_text for hover_text_text in hover_text)
-    assert any(b_hover_text in hover_text_text for hover_text_text in hover_text)
-    assert any(c_hover_text in hover_text_text for hover_text_text in hover_text)
-    # F is an internal node and has no metadata as is not a sample.
-    assert any(f_hover_text in hover_text_text for hover_text_text in hover_text)
+    print(f"\n   Expect list of hover text, with metadata separated by <br>, \nFor example, 'A' got: {hover_text['A']}")
+
+    assert a_hover_text in str(hover_text['A'])
+    assert b_hover_text in hover_text['B']
+    assert c_hover_text in hover_text['C']
+    assert hover_text['F'] == 'F'
 
 
 def test_get_colourings(metadata_with_neighbours):
     """
     Test that list of colours are created for leaves, with internal nodes coloured black rgb(0,0,0,1.0).
     """
-    internal_node_colour = 'rgb(0,0,0,1.0)'
+    internal_node_colour = 'rgb(0,0,0)'
     colourings = intreeactive.get_colourings(
         metadata_with_neighbours,
         id_column=id_column,
-        category='name',
-        number_of_nodes=len(node_list),
+        category=id_column,
         node_list=node_list,
         intermediate_node_colour=internal_node_colour,
     )
-    print(f'\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\ngot: {colourings}')
+    print(colourings)
 
-    assert colourings[0] != internal_node_colour
-    assert colourings[1] == internal_node_colour
-    assert colourings[5] != internal_node_colour
+    assert colourings['F'] == internal_node_colour
+    assert colourings['E'] == internal_node_colour
+    assert colourings['A'] != internal_node_colour
 
 
 def test_get_colourings_missing_data(metadata_with_neighbours):
@@ -351,16 +351,16 @@ def test_get_colourings_missing_data(metadata_with_neighbours):
     metadata_with_neighbours.at[2, 'name'] = None
     metadata_with_neighbours.at[3, 'name'] = ''
 
+    
     colourings = intreeactive.get_colourings(
         metadata_with_neighbours,
         id_column=id_column,
         category='name',
-        number_of_nodes=len(node_list),
         node_list=node_list,
         intermediate_node_colour=internal_node_colour,
     )
-    print(f'\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\ngot: {colourings}')
-    assert (len(set(colourings))) == 5, 'Expecting 5 different colours'
+
+    assert (len(set(colourings.values()))) == 5, 'Expecting 5 different colours'
 
 
 def test_get_colourings_numerical_data(metadata_with_neighbours):
@@ -373,13 +373,11 @@ def test_get_colourings_numerical_data(metadata_with_neighbours):
         metadata_with_neighbours,
         id_column=id_column,
         category='nums',
-        number_of_nodes=len(node_list),
         node_list=node_list,
         intermediate_node_colour=internal_node_colour,
     )
-    print(f'\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\ngot: {colourings}')
-    assert (len(set(colourings))) == 4, 'Expecting 4 different colours'
-    assert colourings[2] == colourings[5]
+    assert (len(set(colourings.values()))) == 4, 'Expecting 4 different colours'
+    assert colourings['E'] == internal_node_colour and colourings['F'] == internal_node_colour
 
 
 def test_get_colourings_mixed_data(metadata_with_neighbours):
@@ -392,12 +390,11 @@ def test_get_colourings_mixed_data(metadata_with_neighbours):
         metadata_with_neighbours,
         id_column=id_column,
         category='mixed',
-        number_of_nodes=len(node_list),
         node_list=node_list,
         intermediate_node_colour=internal_node_colour,
     )
-    print(f'\n   Expect [hex, {internal_node_colour}, hex, {internal_node_colour}, hex, hex]\ngot: {colourings}')
-    assert (len(set(colourings))) == 5, f'Expecting 5 different colours, got {len(set(colourings))}'
+    
+    assert (len(set(colourings.values()))) == 5, f'Expecting 5 different colours, got {len(set(colourings))}'
 
 
 def test_continuous_colours(metadata_with_neighbours):
@@ -412,10 +409,10 @@ def test_continuous_colours(metadata_with_neighbours):
         metadata_with_neighbours,
         id_column=id_column,
         date_category='date',
-        number_of_nodes=len(node_list),
         node_list=node_list,
         intermediate_node_colour=internal_node_colour,
     )
+    print(colours)
     print(
         f'\n Colours are assigned as a gradient for the dates, such that:\n'
         f'    - no dates are given rgb(0, 0, 0),\n'
@@ -424,9 +421,9 @@ def test_continuous_colours(metadata_with_neighbours):
         f'For the metadata, the colour assigned for the date is: \n'
         f'{dict(zip(node_list, colours, strict=False))}'
     )
-    assert colours[0] == 'rgb(128, 0, 0)'
-    assert colours[6] == 'rgb(0, 0, 131)'
-    assert colours[1] == 'rgb(0, 0, 0)' and colours[3] == 'rgb(0, 0, 0)'
+    assert colours['A'] == 'rgb(128, 0, 0)'
+    assert colours['O'] == 'rgb(0, 0, 131)'
+    assert colours['E'] == 'rgb(0, 0, 0)' and colours['F'] == 'rgb(0, 0, 0)'
 
 
 def test_all_same_date():
@@ -449,14 +446,12 @@ def test_all_same_date():
         metadata_same_date,
         id_column='ID',
         date_category='date',
-        number_of_nodes=len(nodes_test_all_same_date),
         node_list=nodes_test_all_same_date,
         intermediate_node_colour=internal_node_colour,
     )
-    metadata_same_date['colours'] = colours[1:5]
-    print(f'\n If all entries have the same date, they are all assigned maroon rgb(0, 0, 131).\n{metadata_same_date}')
-    assert colours[0] and colours[5] == 'rgb(128, 128, 128)'  # these are internal nodes
-    assert [x == 'rgb(0, 0, 131)' for x in colours[1:5]]
+    assert colours['internal1'] and colours['internal2'] == 'rgb(128, 128, 128)'  # these are internal nodes
+    assert len([name for name in colours if colours[name] == 'rgb(0, 0, 131)']) == 4
+    
 
 
 def test_gradient_colours_with_missing_dates():
@@ -478,16 +473,15 @@ def test_gradient_colours_with_missing_dates():
         metadata_missing_dates, orient='index', columns=['ID', 'date']
     ).reset_index(drop=True)
     nodes_test_missing_dates = ['internal1', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'internal2']
-    internal_node_colour = 'rgb(128, 128, 128, 0.0)'
+    internal_node_colour = 'rgb(128, 128, 128)'
     colours = intreeactive.get_continuous_colourings(
         metadata_missing_dates,
         id_column='ID',
         date_category='date',
-        number_of_nodes=len(nodes_test_missing_dates),
         node_list=nodes_test_missing_dates,
         intermediate_node_colour=internal_node_colour,
     )
-    metadata_missing_dates['colours'] = colours[1:8]
+    
     print(
         f'\n Colours are assigned as a gradient for the dates, such that:\n'
         f'    - no dates are given rgb(0, 0, 0),\n'
@@ -496,11 +490,10 @@ def test_gradient_colours_with_missing_dates():
         f'For the metadata, the colour assigned for the date is: \n'
         f'{metadata_missing_dates})'
     )
-
-    assert colours[0] and colours[-1] == 'rgb(128, 128, 128, 0.0)'  # these are internal nodes
-    assert colours[2] == 'rgb(0, 0, 0, 1.0)'  # these are the empty dates
-    assert colours[6] == 'rgb(0, 0, 0, 1.0)'
-    assert colours[7] == 'rgb(0, 0, 0, 1.0)'
+    assert colours['internal1'] and colours['internal2'] == 'rgb(128, 128, 128)'  # these are internal nodes
+    assert colours['B'] == 'rgb(0, 0, 0)'  # these are the empty dates
+    assert colours['F'] == 'rgb(0, 0, 0)'
+    assert colours['G'] == 'rgb(0, 0, 0)'
 
 
 def test_gradient_colours_with_all_same_or_missing():
@@ -522,23 +515,21 @@ def test_gradient_colours_with_all_same_or_missing():
     ).reset_index(drop=True)
 
     nodes_test_mixed_dates = ['internal1', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'internal2']
-    internal_node_colour = 'rgb(128, 128, 128, 0.0)'
+    internal_node_colour = 'rgb(128, 128, 128)'
     colours = intreeactive.get_continuous_colourings(
         metadata_mixed_dates_df,
         id_column='ID',
         date_category='date',
-        number_of_nodes=len(nodes_test_mixed_dates),
         node_list=nodes_test_mixed_dates,
         intermediate_node_colour=internal_node_colour,
     )
-    metadata_mixed_dates_df['colours'] = colours[1:8]
     print(
-        f'\n If date is either the same one date it is maroon (rgb(0, 0, 131)) or empty it is black (rgb(0, 0, 0, 1.0)).\n'
+        f'\n If date is either the same one date it is maroon (rgb(0, 0, 131)) or empty it is black (rgb(0, 0, 0)).\n'
         f'{metadata_mixed_dates_df})'
     )
-    assert colours[0] and colours[-1] == 'rgb(128, 128, 128, 0.0)'
-    assert colours[5] == 'rgb(0, 0, 0, 1.0)' and colours[6] == 'rgb(0, 0, 0, 1.0)'
-    assert [x == 'rgb(0, 0, 131)' for x in colours[1:5]]
+    assert colours['internal1'] and colours['internal2'] == 'rgb(128, 128, 128)'
+    assert colours['E'] == 'rgb(0, 0, 0)' and colours['F'] == 'rgb(0, 0, 0)'
+    assert len([name for name in colours if colours[name] == 'rgb(0, 0, 131)']) == 5
 
 
 def test_read_in_metadata():
@@ -560,6 +551,18 @@ def test_read_in_metadata_id_wrong():
     df, id_col = intreeactive.read_in_metadata(path_to_metadata, 'id_col')
     assert id_col == 'ID'
     assert 'ID' in df.columns.values
+
+
+def test_create_tree(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_path):
+    intreeactive.write_interactive_tree(
+        tree=test_tree,
+        output_name=Path(tmp_path / 'test_tree.html'),
+        metadata=metadata_with_neighbours,
+        id_column='ID',
+        snp_distance_matrix=snp_dist_matrix,
+        exclude_internal_nodes=True,
+        title='Test Tree',
+    )
 
 
 # def test_make_12snp_clusters():
