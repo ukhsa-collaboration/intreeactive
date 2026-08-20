@@ -606,7 +606,7 @@ def write_interactive_tree(
     clade_nodes_and_colours: dict = {}
     for clade in my_tree_clades:
         if not clade.name:
-            clade.name = 'root'
+            clade.name = 'internal'
         clade_nodes_and_colours[clade] = {
             'x': tree_x_coords[clade],
             'y': tree_y_coords[clade],
@@ -621,7 +621,7 @@ def write_interactive_tree(
     )
 
     for clade, info in clade_nodes_and_colours.items():
-        info['hover_text'] = hover_text[clade.name]
+        info['hover_text'] = "" if clade.name == 'internal' else hover_text[clade.name] 
 
     ###########
     # 4. Set colours for the nodes and add to the dict.
