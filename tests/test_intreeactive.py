@@ -323,9 +323,9 @@ def test_make_hover_text(metadata_with_neighbours):
 
 def test_get_colourings(metadata_with_neighbours):
     """
-    Test that list of colours are created for leaves, with internal nodes coloured black rgb(0,0,0).
+    Test that list of colours are created for leaves, with internal nodes coloured black rgb(0,0,0,1.0).
     """
-    internal_node_colour = 'rgb(0,0,0)'
+    internal_node_colour = 'rgb(0,0,0,1.0)'
     colourings = intreeactive.get_colourings(
         metadata_with_neighbours,
         id_column=id_column,
@@ -478,7 +478,7 @@ def test_gradient_colours_with_missing_dates():
         metadata_missing_dates, orient='index', columns=['ID', 'date']
     ).reset_index(drop=True)
     nodes_test_missing_dates = ['internal1', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'internal2']
-    internal_node_colour = 'rgb(128, 128, 128)'
+    internal_node_colour = 'rgb(128, 128, 128, 0.0)'
     colours = intreeactive.get_continuous_colourings(
         metadata_missing_dates,
         id_column='ID',
@@ -497,10 +497,10 @@ def test_gradient_colours_with_missing_dates():
         f'{metadata_missing_dates})'
     )
 
-    assert colours[0] and colours[-1] == 'rgb(128, 128, 128)'  # these are internal nodes
-    assert colours[2] == 'rgb(0, 0, 0)'  # these are the empty dates
-    assert colours[6] == 'rgb(0, 0, 0)'
-    assert colours[7] == 'rgb(0, 0, 0)'
+    assert colours[0] and colours[-1] == 'rgb(128, 128, 128, 0.0)'  # these are internal nodes
+    assert colours[2] == 'rgb(0, 0, 0, 1.0)'  # these are the empty dates
+    assert colours[6] == 'rgb(0, 0, 0, 1.0)'
+    assert colours[7] == 'rgb(0, 0, 0, 1.0)'
 
 
 def test_gradient_colours_with_all_same_or_missing():
@@ -522,7 +522,7 @@ def test_gradient_colours_with_all_same_or_missing():
     ).reset_index(drop=True)
 
     nodes_test_mixed_dates = ['internal1', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'internal2']
-    internal_node_colour = 'rgb(128, 128, 128)'
+    internal_node_colour = 'rgb(128, 128, 128, 0.0)'
     colours = intreeactive.get_continuous_colourings(
         metadata_mixed_dates_df,
         id_column='ID',
@@ -533,11 +533,11 @@ def test_gradient_colours_with_all_same_or_missing():
     )
     metadata_mixed_dates_df['colours'] = colours[1:8]
     print(
-        f'\n If date is either the same one date it is maroon (rgb(0, 0, 131)) or empty it is black (rgb(0, 0, 0)).\n'
+        f'\n If date is either the same one date it is maroon (rgb(0, 0, 131)) or empty it is black (rgb(0, 0, 0, 1.0)).\n'
         f'{metadata_mixed_dates_df})'
     )
-    assert colours[0] and colours[-1] == 'rgb(128, 128, 128)'
-    assert colours[5] == 'rgb(0, 0, 0)' and colours[6] == 'rgb(0, 0, 0)'
+    assert colours[0] and colours[-1] == 'rgb(128, 128, 128, 0.0)'
+    assert colours[5] == 'rgb(0, 0, 0, 1.0)' and colours[6] == 'rgb(0, 0, 0, 1.0)'
     assert [x == 'rgb(0, 0, 131)' for x in colours[1:5]]
 
 
