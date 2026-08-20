@@ -1,7 +1,6 @@
 import base64
 import datetime
 import json
-import os.path
 import sys
 from importlib.resources import as_file, files
 from itertools import cycle
@@ -22,7 +21,7 @@ html_res = files('html_res')
 
 def read_in_tree(
     *,
-    path_to_tree: str | os.PathLike,
+    path_to_tree: str | Path,
     outgroup: str | None = None,
     tree_format: Literal['newick', 'nexus', 'nexml', 'phyloxml', 'cdao'] = 'newick',
 ):
@@ -41,7 +40,7 @@ def read_in_tree(
     return tree
 
 
-def read_in_metadata(path_to_metadata: str | os.PathLike, id_column: str | None = None) -> tuple[pd.DataFrame, str]:
+def read_in_metadata(path_to_metadata: str | Path, id_column: str | None = None) -> tuple[pd.DataFrame, str]:
     """
     Read in metadata and read with Pandas - all cells should be strings.
     Change the id_column to "ID" and make sure there are no other ID columns.
@@ -59,7 +58,7 @@ def read_in_metadata(path_to_metadata: str | os.PathLike, id_column: str | None 
     return metadata_df, new_id_column
 
 
-def read_in_snp_dist_matrix(path_to_snp_dists: str | os.PathLike) -> pd.DataFrame:
+def read_in_snp_dist_matrix(path_to_snp_dists: str | Path) -> pd.DataFrame:
     """
     Read in snp distance matrix using pandas. The row names and column names should match, and should be parsed as
     strings.
@@ -432,7 +431,7 @@ def get_continuous_colourings(
     return gradient_colours
 
 
-def inline_html_images(html_res_path: os.PathLike | str, input_html: str) -> str:
+def inline_html_images(html_res_path: Path | str, input_html: str) -> str:
     input_html_path = Path(html_res_path, input_html)
     html_str = input_html_path.read_text()
     soup = bs(html_str, features='lxml')
@@ -448,7 +447,7 @@ def inline_html_images(html_res_path: os.PathLike | str, input_html: str) -> str
     return str(soup)
 
 
-def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str:
+def generate_html(html_res_path: Path | str, input_fig: go.Figure) -> str:
     """
     Takes in a plotly figure, reads some resources from the html_res directory and generates a static HTML string as
     output.
@@ -548,7 +547,7 @@ def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str
 def write_interactive_tree(
     *,
     tree,
-    output_name: str | os.PathLike,
+    output_name: str | Path,
     metadata: pd.DataFrame,
     id_column: str = 'ID',
     snp_distance_matrix: pd.DataFrame,
