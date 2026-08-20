@@ -185,7 +185,7 @@ def get_clade_lines(
     x_curr: str = '0',
     y_bot: str = '0',
     y_top: str = '0',
-    line_colour: str = 'rgb(25,25,25)',
+    line_colour: str = 'rgb(25,25,25,1.0)',
     line_width: float = 0.5,
 ) -> dict:
     """
@@ -217,7 +217,7 @@ def draw_clade(
     y_coords: dict,
     line_shapes: list[dict],
     x_start: str = '0',
-    line_colour: str = 'rgb(15,15,15)',
+    line_colour: str = 'rgb(15,15,15,1.0)',
     line_width: int = 1,
 ):
     """
@@ -328,19 +328,20 @@ def get_colourings(
     category: str,
     number_of_nodes: int,
     node_list: list,
-    intermediate_node_colour: str = 'rgb(100,100,100)',
+    intermediate_node_colour: str = 'rgb(100,100,100,0.0)',
 ) -> list:
     """
     For a given column in the metadata dataframe provided, create a list of colours (strings) such that each unique
     item in that column (category) is given its own colour. Categories (columns) with more than 48 unique items are not
     given colours and are not made available to colour the nodes (reasoning: >48 colours is difficult to visualise).
+    Inner nodes opacity is set to 0 by default, set intermediate_node_colour to override.
 
     :param metadata_df: the Pandas dataframe of metadata.
     :param id_column: the id column, automatically detected in the metadata dataframe.
     :param category: the column name to be coloured from the Pandas dataframe.
     :param number_of_nodes: number of nodes
     :param node_list: list of nodes
-    :param intermediate_node_colour: colour for intermediate nodes (default = grey).
+    :param intermediate_node_colour: colour for intermediate nodes (default = invisible).
     :return: list of colours for each node in the order that the nodes occur.
     """
     # Create list of colours - use plotly built in, for total of 48 unique colours.
@@ -366,7 +367,7 @@ def get_continuous_colourings(
     date_category: str,
     number_of_nodes: int,
     node_list: list,
-    intermediate_node_colour: str = 'rgb(100,100,100)',
+    intermediate_node_colour: str = 'rgb(100,100,100,0.0)',
 ) -> list:
     """
     For a date column, create a list of colours (in rgb) such that dates are coloured in a gradient. Newest date is
@@ -377,7 +378,7 @@ def get_continuous_colourings(
     :param date_category: the name of the column that contained dates to be coloured in a gradient from the metadata.
     :param number_of_nodes: number of nodes
     :param node_list: list of nodes
-    :param intermediate_node_colour: colour for intermediate nodes (default = grey).
+    :param intermediate_node_colour: colour for intermediate nodes, use RGBA (default = grey but opacaity 0).
     :return: list of colours for each node in the order that the nodes occur.
     """
     # Copy metadata:
@@ -386,12 +387,12 @@ def get_continuous_colourings(
     metadata_copy[date_category] = pd.to_datetime(
         metadata_copy[date_category], errors='coerce', format='mixed', yearfirst=True, dayfirst=True
     )
-    # If all dates are empty, assign all nodes to black (rgb(0, 0, 0):
+    # If all dates are empty, assign all nodes to black (rgb(0, 0, 0, 1.0):
     if len(metadata_copy[date_category].unique()) == 1 and any(
         pd.isna(i) for i in metadata_copy[date_category].unique()
     ):
         metadata_copy['date_delta'] = metadata_copy[date_category].apply(lambda x: '0')
-        gradient_colouring_dict = {'0': 'rgb(0, 0, 0)'}
+        gradient_colouring_dict = {'0': 'rgb(0, 0, 0, 1.0)'}
     # Dates will be given a colour ranging from maroon (most recent) to royal blue (oldest).
     # If there is only one date all samples will be maroon (rgb(0, 0, 151)). Any empty dates get black (rgb(0, 0, 0)).
     else:
@@ -411,7 +412,7 @@ def get_continuous_colourings(
         gradient_colouring_dict = dict(zip(date_deltas, colour_gradient, strict=False))
         # Replace NaN with 'no_date' and add to dict to return black:
         metadata_copy['date_delta'] = metadata_copy['date_delta'].fillna('no_date')
-        gradient_colouring_dict['no_date'] = 'rgb(0, 0, 0)'
+        gradient_colouring_dict['no_date'] = 'rgb(0, 0, 0, 1.0)'
     # Create the list of colours - the list is as long as the number of nodes in the tree.
     list_of_gradient_colours = [intermediate_node_colour] * int(number_of_nodes)
     # For each row in the metadata field with the index, get the index in text list
@@ -581,7 +582,7 @@ def write_interactive_tree(
         x_coords=tree_x_coords,
         y_coords=tree_y_coords,
         line_shapes=tree_line_shapes,
-        line_colour='rgb(25,25,25)',
+        line_colour='rgb(25,25,25,1.0)',
         line_width=1,
     )
 
@@ -721,7 +722,7 @@ def write_interactive_tree(
         },
         yaxis={'visible': False},
         hovermode='closest',
-        plot_bgcolor='rgb(250,250,250)',
+        plot_bgcolor='rgb(250,250,250,0.8)',
         margin={'l': 10, 't': 150},
         # shapes=tree_line_shapes,  # lines for tree branches
         updatemenus=drop_down_update,  # This adds the drop-down menu to change the node colours.
@@ -730,7 +731,7 @@ def write_interactive_tree(
     fig = go.Figure(data=[trace], layout=layout)
 
     # Add in the SVG path
-    fig.update_layout(shapes=[{'type': 'path', 'path': svg_path, 'line_color': 'rgb(25,25,25)', 'layer': 'below'}])
+    fig.update_layout(shapes=[{'type': 'path', 'path': svg_path, 'line_color': 'rgb(25,25,25,1.0)', 'layer': 'below'}])
 
     # Add text annotations as a separate trace
     fig.add_trace(
