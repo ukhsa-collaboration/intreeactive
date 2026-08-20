@@ -1,8 +1,8 @@
 import argparse
-import os
-import glob
-import sys
 import datetime
+import glob
+import os
+import sys
 import textwrap
 
 from intreeactive import intreeactive
@@ -14,7 +14,7 @@ def get_args():
     parser = argparse.ArgumentParser(
         prog='intreeactive',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=textwrap.dedent('''\
+        epilog=textwrap.dedent("""\
         Create an interactive tree in one html file. 
         
         It has interactive features such as move, zoom and pan, on-hover sample metadata, node colouring, custom node 
@@ -25,8 +25,7 @@ def get_args():
         intreeactive --tree example/tb_in_middle_earth_tree.new --metadata example/tb_in_middle_earth_metadata.csv \
 --snp-distance-matrix example/tb_in_middle_earth_snpdists_matrix.txt -d example -o example_interactive_tree \
 -O AL123456.3 -x AL123456.3 -I 'ID_col' --title 'Example interactive phylogeny: TB in Middle Earth.' --force
-        '''
-                               )
+        """),
     )
     parser.add_argument(
         '--tree',
@@ -35,7 +34,7 @@ def get_args():
         type=str,
         required=True,
         help='Required: supply the path to the tree file. If file is not Newick format, specify the tree type using '
-             '--tree-format/-tf'
+        '--tree-format/-tf',
     )
     parser.add_argument(
         '--metadata',
@@ -44,9 +43,9 @@ def get_args():
         type=str,
         required=True,
         help='Required: supply the path to the metadata file. The first column will be used as the sample ID unless '
-             'specified with --id-column/-id. This sample ID will be used to match samples in the tree, metadata and '
-             'SNP distance matrix. If any samples are not present in the metadata but are in the tree or snp distance '
-             'matrix, use the --ignore-ids/-x to ignore these.'
+        'specified with --id-column/-id. This sample ID will be used to match samples in the tree, metadata and '
+        'SNP distance matrix. If any samples are not present in the metadata but are in the tree or snp distance '
+        'matrix, use the --ignore-ids/-x to ignore these.',
     )
     parser.add_argument(
         '--snp-distance-matrix',
@@ -55,7 +54,7 @@ def get_args():
         type=str,
         required=True,
         help='Required: Supply path to the SNP distance matrix. Can use any seperator, the order of the columns must be '
-             'identical to the order of the rows.'
+        'identical to the order of the rows.',
     )
     parser.add_argument(
         '--tree-format',
@@ -65,7 +64,16 @@ def get_args():
         required=False,
         default='newick',
         help='Optional: if the tree file is not Newick (.new or .newick), supply the tree file format. '
-             'Default: "Newick"'
+        'Default: "Newick".',
+    )
+    parser.add_argument(
+        '--exclude-internal',
+        '-n',
+        type=bool,
+        required=False,
+        default=False,
+        help='Exclude internal nodes in the tree - True if hide internal nodes, false to show internal nodes. '
+        'Default: False.',
     )
     parser.add_argument(
         '--outgroup',
@@ -75,7 +83,7 @@ def get_args():
         required=False,
         default=None,
         help='Optional: supply the name of the ID for the outgroup. If the outgroup is supplied, the tree will be '
-             'rooted here.'
+        'rooted here.',
     )
     parser.add_argument(
         '--id-column',
@@ -85,7 +93,7 @@ def get_args():
         required=False,
         default='ID',
         help='Optional: supply the name of the column that contains the ID to match samples in the metadata to the tree'
-             'leaves and the SNP distance matrix. Default="ID"'
+        'leaves and the SNP distance matrix. Default="ID"',
     )
     parser.add_argument(
         '--ignore',
@@ -96,7 +104,7 @@ def get_args():
         required=False,
         default=None,
         help='Optional: supply the name(s) of the ID(s) to be ignored - these are IDs that are present in the tree but '
-             'not in the SNP distance matrix or the metadata, for example the outgroup/reference. Default=None.'
+        'not in the SNP distance matrix or the metadata, for example the outgroup/reference. Default=None.',
     )
     parser.add_argument(
         '--output',
@@ -106,8 +114,8 @@ def get_args():
         required=False,
         default='interactive_tree',
         help='Optional: Filename or path with filename to be used as the output. Do not include the suffix, .html will '
-             'be added. Intreeactive will not overwrite files with the same name. Use --force to overwrite a file with '
-             'the provided file name of path. Default="interactive_tree".'
+        'be added. Intreeactive will not overwrite files with the same name. Use --force to overwrite a file with '
+        'the provided file name of path. Default="interactive_tree".',
     )
     parser.add_argument(
         '--output-dir',
@@ -117,7 +125,7 @@ def get_args():
         required=False,
         default=None,
         help='Optional: Name of directory or path with directory to be used to save the output into. '
-             'If it does not already exist, it will be created. Default=current working directory.'
+        'If it does not already exist, it will be created. Default=current working directory.',
     )
     parser.add_argument(
         '--title',
@@ -126,13 +134,11 @@ def get_args():
         type=str,
         required=False,
         default=None,
-        help='Optional: Title to be added to the interactive tree. Default="Interactive Tree - <date today>".'
+        help='Optional: Title to be added to the interactive tree. Default="Interactive Tree - <date today>".',
     )
     parser.add_argument(
-        '--force',
-        dest='force',
-        help='Overwrite the output directory if it already exists',
-        action='store_true')
+        '--force', dest='force', help='Overwrite the output directory if it already exists', action='store_true'
+    )
     return parser.parse_args()
 
 
@@ -190,10 +196,7 @@ def main():
 
     ### Set up files:
     # Tree: read tree file (specify format) and parse as Bio.Phylo tree object, specifying an outgroup will root the tree.
-    tree = intreeactive.read_in_tree(path_to_tree=args.tree_path,
-                                     tree_format=args.tree_format,
-                                     outgroup=args.outgroup
-                                     )
+    tree = intreeactive.read_in_tree(path_to_tree=args.tree_path, tree_format=args.tree_format, outgroup=args.outgroup)
 
     # Metadata: the metadata is used to add information to the hover text, as well as matching up the nearest
     # neighbours. This reads in from csv into pandas df, sets content to strings, gets the id_column if not specified
@@ -209,24 +212,25 @@ def main():
 
     # This checks if sample IDs match up in the various files - the samples in the tree must have metadata
     # and nearest neighbour information.
-    checked_metadata = intreeactive.check_ids(tree=tree,
-                                              metadata=metadata_df,
-                                              id_column=id_column,
-                                              snp_dists=snp_distance_matrix,
-                                              ignore_ids=args.ignore_ids)
+    checked_metadata = intreeactive.check_ids(
+        tree=tree, metadata=metadata_df, id_column=id_column, snp_dists=snp_distance_matrix, ignore_ids=args.ignore_ids
+    )
 
     # The check_ids function also reduces the metadata down to only entries needed for the tree to save on computation:
     metadata_df = checked_metadata if not checked_metadata.empty else metadata_df
 
     # Set up the title for the plot:
-    today = datetime.date.today().strftime("%Y%m%d")
-    title = args.title if args.title else f"Interactive Phylogeny, {today}"
+    today = datetime.date.today().strftime('%Y%m%d')
+    title = args.title if args.title else f'Interactive Phylogeny, {today}'
 
     # This is the main function - it takes in the Phylo tree object, a path or name to the output file, metadata Pandas
     # Dataframe, the name of the ID column
-    intreeactive.write_interactive_tree(tree=tree,
-                                        output_name=output_path,
-                                        metadata=metadata_df,
-                                        id_column=id_column,
-                                        snp_distance_matrix=snp_distance_matrix,
-                                        title=title)
+    intreeactive.write_interactive_tree(
+        tree=tree,
+        output_name=output_path,
+        metadata=metadata_df,
+        id_column=id_column,
+        snp_distance_matrix=snp_distance_matrix,
+        exclude_internal_nodes=args.exclude_internal,
+        title=title,
+    )
