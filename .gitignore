@@ -143,3 +143,5 @@ rsconnect/
 src/html_res/tempmetadata.js
 output/*.html
 .directory
+
+example/example_interactive_tree.html
