@@ -69,11 +69,10 @@ def get_args():
     parser.add_argument(
         '--exclude-internal',
         '-n',
-        type=bool,
+        action='store_true',
         required=False,
-        default=False,
-        help='Exclude internal nodes in the tree - True if hide internal nodes, false to show internal nodes. '
-        'Default: False.',
+        help='Exclude internal nodes in the tree - by default internal nodes are shown on the tree. Use this flag to '
+        'exclude internal nodes from the tree.',
     )
     parser.add_argument(
         '--outgroup',
@@ -232,6 +231,6 @@ def main():
         metadata=metadata_df,
         id_column=id_column,
         snp_distance_matrix=snp_distance_matrix,
-        exclude_internal_nodes=args.exclude_internal,
+        exclude_internal_nodes=bool(args.exclude_internal),
         title=title,
     )
