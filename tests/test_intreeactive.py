@@ -1,4 +1,5 @@
 from io import StringIO
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -14,6 +15,8 @@ pd.set_option('display.max_rows', None)
 node_list = ['A', 'F', 'B', 'E', 'C', 'D']
 id_column = 'ID'
 
+root = Path(__file__).parents[1]
+path_to_metadata = Path(root / 'tests/test_snp_metadata.csv')
 
 @pytest.fixture
 def test_tree():
@@ -540,21 +543,21 @@ def test_gradient_colours_with_all_same_or_missing():
 
 def test_read_in_metadata():
     print('Check metadata is parsed correctly when not specifying id column.')
-    df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv')
+    df, id_col = intreeactive.read_in_metadata(path_to_metadata)
     assert id_col == 'ID'
     assert 'ID' in df.columns.values
 
 
 def test_read_in_metadata_id_col():
     print('Check metadata is parsed correctly when specifying id column.')
-    df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv', 'ID_col')
+    df, id_col = intreeactive.read_in_metadata(path_to_metadata, 'ID_col')
     assert id_col == 'ID'
     assert 'ID' in df.columns.values
 
 
 def test_read_in_metadata_id_wrong():
     print('Check metadata is parsed correctly when specifying incorrect id column.')
-    df, id_col = intreeactive.read_in_metadata('test_snp_metadata.csv', 'id_col')
+    df, id_col = intreeactive.read_in_metadata(path_to_metadata, 'id_col')
     assert id_col == 'ID'
     assert 'ID' in df.columns.values
 
