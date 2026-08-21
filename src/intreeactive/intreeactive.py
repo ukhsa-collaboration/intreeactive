@@ -602,10 +602,12 @@ def write_interactive_tree(
     # 3. get the node coordinates
     my_tree_clades = tree_x_coords.keys()
 
+    # Make the node list here to make sure all of the internal
+    node_list: list[str] = []
+
     clade_nodes_and_colours: dict = {}
     for clade in my_tree_clades:
-        if not clade.name:
-            clade.name = 'internal'
+        node_list.append(clade.name)
         clade_nodes_and_colours[clade] = {
             'x': tree_x_coords[clade],
             'y': tree_y_coords[clade],
@@ -615,12 +617,10 @@ def write_interactive_tree(
 
     ##########
     # 3.5 Create the text for the hover text and add to the dict
-    hover_text: dict[str, str] = make_hover_text(
-        metadata_df=metadata, id_column=id_column, node_list=[clade.name for clade in clade_nodes_and_colours]
-    )
+    hover_text: dict[str, str] = make_hover_text(metadata_df=metadata, id_column=id_column, node_list=node_list)
 
     for clade, info in clade_nodes_and_colours.items():
-        info['hover_text'] = "" if clade.name == 'internal' else hover_text[clade.name] 
+        info['hover_text'] = '' if not clade.name else hover_text[clade.name]
 
     ###########
     # 4. Set colours for the nodes and add to the dict.
@@ -630,35 +630,40 @@ def write_interactive_tree(
         metadata_df=metadata,
         id_column=id_column,
         category=id_column,
-        node_list=[clade.name for clade in clade_nodes_and_colours],
+        node_list=node_list,
     )
 
     # Add the colours to the dict
     for clade, node_info in clade_nodes_and_colours.items():
-        node_info['colour'] = colourings[clade.name]
+        if clade.name:
+            node_info['colour'] = colourings[clade.name]
 
     # ###########
     # 5. Create traces for plotly plot - These are the nodes.
-    # Plotly takes lists -
+    # If exclude_internal is true, filter the dict of things to plot.
+    clade_nodes_to_plot = clade_nodes_and_colours.copy()
+    # Make a new dict to plot to allow filtering
+    if exclude_internal_nodes:
+        no_internal_node_list = []
+        for clade, value in clade_nodes_and_colours.items():
+            if value['is_terminal']:
+                no_internal_node_list.append(clade.name)
+            else:
+                clade_nodes_to_plot.pop(clade)
+
+        node_list = no_internal_node_list
+
     # Make lists of the x and y coords, colours, hover text and node list ready to give to plotly.
     x_nodes: list[float] = []
     y_nodes: list[float] = []
     node_colours: list[str] = []
     node_hover_text: list[str] = []
-    node_list: list[str] = []
 
-    clade_nodes_to_plot: dict = (
-        {name: value for name, value in clade_nodes_and_colours.items() if value['is_terminal']}
-        if exclude_internal_nodes
-        else clade_nodes_and_colours.copy()
-    )
-
-    for clade, info in clade_nodes_to_plot.items():
+    for _, info in clade_nodes_to_plot.items():
         x_nodes.append(info['x'])
         y_nodes.append(info['y'])
         node_colours.append(info['colour'])
         node_hover_text.append(info['hover_text'])
-        node_list.append(clade.name)
 
     trace = go.Scattergl(
         x=x_nodes,
@@ -672,6 +677,7 @@ def write_interactive_tree(
     ###########
     # 6. Create the drop-down functionality
     # Add a fancy drop_down list to change the node colours in the interactive tree:
+    # the buttons is a list of dicts with label, method and arg for each drop down option.
     drop_down_update = [
         {
             'buttons': [],
@@ -680,10 +686,18 @@ def write_interactive_tree(
             'showactive': True,
             'x': 1.01,
             'xanchor': 'right',
-            'y': 1.075,
+            'y': 1.15,
             'yanchor': 'top',
         }
     ]
+
+    # Add the id column to the dropdown list:
+    id_drop_down = {
+        'label': id_column,
+        'method': 'update',
+        'args': [{'marker.color': [node_colours]}],
+    }
+    drop_down_update[0]['buttons'].append(id_drop_down)
 
     # Create a colour list for every column in the metadata dataframe if >=48 things to colour:
     for category_to_colour in metadata.columns.values:
@@ -697,7 +711,7 @@ def write_interactive_tree(
             drop_down_update_dict = {
                 'label': category_to_colour,
                 'method': 'update',
-                'args': [{'marker.color': list(continuous_colours.values())}],
+                'args': [{'marker.color': [list(continuous_colours.values())]}],
             }
             drop_down_update[0]['buttons'].append(drop_down_update_dict)
         else:
@@ -712,7 +726,7 @@ def write_interactive_tree(
                 drop_down_update_dict = {
                     'label': category_to_colour,
                     'method': 'update',
-                    'args': [{'marker.color': list(discrete_colours.values())}],
+                    'args': [{'marker.color': [list(discrete_colours.values())]}],
                 }
                 drop_down_update[0]['buttons'].append(drop_down_update_dict)
 
