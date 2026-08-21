@@ -145,3 +145,4 @@ output/*.html
 .directory
 
 example/example_interactive_tree.html
+example/*
