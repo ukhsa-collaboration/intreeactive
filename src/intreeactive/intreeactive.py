@@ -12,7 +12,6 @@ import plotly.colors
 import plotly.express as px
 import plotly.graph_objects as go
 from Bio import Phylo
-from Bio.Phylo.BaseTree import Clade
 from bs4 import BeautifulSoup as bs
 
 # Set up html_res path:
@@ -607,6 +606,8 @@ def write_interactive_tree(
 
     clade_nodes_and_colours: dict = {}
     for clade in my_tree_clades:
+        if not clade.name:
+            clade.name = 'unlabelled'
         node_list.append(clade.name)
         clade_nodes_and_colours[clade] = {
             'x': tree_x_coords[clade],
@@ -615,32 +616,55 @@ def write_interactive_tree(
             'colour': 'rgb(0,0,0)' if clade.is_terminal() else 'rgb(100,100,100)',  # black if terminal else grey
         }
 
+    print('node_list 1: ', len(node_list))
     ##########
     # 3.5 Create the text for the hover text and add to the dict
     hover_text: dict[str, str] = make_hover_text(metadata_df=metadata, id_column=id_column, node_list=node_list)
 
     for clade, info in clade_nodes_and_colours.items():
-        info['hover_text'] = '' if not clade.name else hover_text[clade.name]
+        info['hover_text'] = '' if clade.name == 'unlabelled' else hover_text[clade.name]
 
     ###########
-    # 4. Set colours for the nodes and add to the dict.
+    # 4. Set colours for the nodes for each category, and add to the dict with the column name as the key.
+    # Store the colour to clade mapping dict in a dict of colourings to add to the main plotting dict later.
 
-    # get colourings for the ID column to plot first - note these will not be unique colours if >48
-    colourings: dict[Clade, str] = get_colourings(
-        metadata_df=metadata,
-        id_column=id_column,
-        category=id_column,
-        node_list=node_list,
-    )
+    column_colourings = {}
 
-    # Add the colours to the dict
+    for category_to_colour in metadata.columns.values:
+        # the ID column in the only one that can have non-unique colours:
+        if category_to_colour == id_column:
+            column_colourings[id_column] = get_colourings(
+                metadata_df=metadata,
+                id_column=id_column,
+                category=id_column,
+                node_list=node_list,
+            )
+        elif 'date' in category_to_colour.lower():
+            column_colourings[category_to_colour] = get_continuous_colourings(
+                metadata_df=metadata,
+                id_column=id_column,
+                date_category=category_to_colour,
+                node_list=node_list,
+            )
+        else:
+            list_of_categories = sorted(set(metadata[category_to_colour]))
+            if len(list_of_categories) <= 48:
+                column_colourings[category_to_colour] = get_colourings(
+                    metadata_df=metadata,
+                    id_column=id_column,
+                    category=category_to_colour,
+                    node_list=node_list,
+                )
+
+    # Add the colours to the dict for the id column
     for clade, node_info in clade_nodes_and_colours.items():
-        if clade.name:
-            node_info['colour'] = colourings[clade.name]
+        for column, colour_mapping in column_colourings.items():
+            node_info[column] = colour_mapping[clade.name]
 
     # ###########
     # 5. Create traces for plotly plot - These are the nodes.
     # If exclude_internal is true, filter the dict of things to plot.
+    print('length clade_nodes_and_colours: ', len(clade_nodes_and_colours))
     clade_nodes_to_plot = clade_nodes_and_colours.copy()
     # Make a new dict to plot to allow filtering
     if exclude_internal_nodes:
@@ -651,19 +675,22 @@ def write_interactive_tree(
             else:
                 clade_nodes_to_plot.pop(clade)
 
-        node_list = no_internal_node_list
-
     # Make lists of the x and y coords, colours, hover text and node list ready to give to plotly.
     x_nodes: list[float] = []
     y_nodes: list[float] = []
     node_colours: list[str] = []
     node_hover_text: list[str] = []
+    node_list_to_plot: list[str] = []
 
-    for _, info in clade_nodes_to_plot.items():
+    for clade, info in clade_nodes_to_plot.items():
         x_nodes.append(info['x'])
         y_nodes.append(info['y'])
-        node_colours.append(info['colour'])
+        node_colours.append(info[id_column])
         node_hover_text.append(info['hover_text'])
+        node_list_to_plot.append(clade.name)
+
+    print('length node list to plot: ', len(node_list_to_plot))
+    print('length clade_nodes_to_plot:', len(clade_nodes_to_plot))
 
     trace = go.Scattergl(
         x=x_nodes,
@@ -700,35 +727,15 @@ def write_interactive_tree(
     drop_down_update[0]['buttons'].append(id_drop_down)
 
     # Create a colour list for every column in the metadata dataframe if >=48 things to colour:
-    for category_to_colour in metadata.columns.values:
-        if 'date' in category_to_colour.lower():
-            continuous_colours = get_continuous_colourings(
-                metadata_df=metadata,
-                id_column=id_column,
-                date_category=category_to_colour,
-                node_list=node_list,
-            )
-            drop_down_update_dict = {
-                'label': category_to_colour,
-                'method': 'update',
-                'args': [{'marker.color': [list(continuous_colours.values())]}],
-            }
-            drop_down_update[0]['buttons'].append(drop_down_update_dict)
-        else:
-            list_of_categories = sorted(set(metadata[category_to_colour]))
-            if len(list_of_categories) <= 48:
-                discrete_colours = get_colourings(
-                    metadata_df=metadata,
-                    id_column=id_column,
-                    category=category_to_colour,
-                    node_list=node_list,
-                )
-                drop_down_update_dict = {
-                    'label': category_to_colour,
-                    'method': 'update',
-                    'args': [{'marker.color': [list(discrete_colours.values())]}],
-                }
-                drop_down_update[0]['buttons'].append(drop_down_update_dict)
+    for category_to_colour in column_colourings:
+        drop_down_update_dict = {
+            'label': category_to_colour,
+            'method': 'update',
+            'args': [
+                {'marker.color': [[clade_nodes_to_plot[clade][category_to_colour] for clade in clade_nodes_to_plot]]}
+            ],
+        }
+        drop_down_update[0]['buttons'].append(drop_down_update_dict)
 
     ###########
     # 7. Add layout to plotly plot - add the lines between nodes.
