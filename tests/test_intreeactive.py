@@ -560,6 +560,17 @@ def test_create_tree(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_p
         metadata=metadata_with_neighbours,
         id_column='ID',
         snp_distance_matrix=snp_dist_matrix,
+        exclude_internal_nodes=False,
+        title='Test Tree',
+    )
+
+def test_create_tree_no_internal_nodes(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_path):
+    intreeactive.write_interactive_tree(
+        tree=test_tree,
+        output_name=Path(tmp_path / 'test_tree.html'),
+        metadata=metadata_with_neighbours,
+        id_column='ID',
+        snp_distance_matrix=snp_dist_matrix,
         exclude_internal_nodes=True,
         title='Test Tree',
     )
