@@ -552,6 +552,7 @@ def write_interactive_tree(
     snp_distance_matrix: pd.DataFrame,
     exclude_internal_nodes: bool = False,
     title: str | None = None,
+    x_axis_range: list[int] | None = None,
 ) -> None:
     """
     Create an interactive phylogeny (html) file for a given phylogeny file.
@@ -563,6 +564,8 @@ def write_interactive_tree(
     :param snp_distance_matrix: Pandas dataframe with all against all SNP distances. Column order must match row
         order (pandas df)
     :param title: string, title of the plot.
+    :param x_axis_range: the range of the x-axis the resulting interactive tree should be plotted on. Default is None,
+    meaning the tree is autoscaled to fit. e.g. x_axis_range=[-20, 20].
     :return: None, but html files are created
     """
     ##################
@@ -770,6 +773,13 @@ def write_interactive_tree(
             visible=False,
         )
     )
+
+    # Set x-axis range if provided.
+    if x_axis_range:
+        if len(x_axis_range) == 2:
+            fig.update_xaxes(range=x_axis_range)
+        else:
+            raise ValueError('x_axis_range arg should be a list of two int values, e.g. [-10, 20].')
 
     ###########
     # 8. Jsonify data for javascript shenanigans
