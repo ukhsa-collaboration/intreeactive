@@ -1,28 +1,29 @@
-import os.path
-import json
-import datetime
 import base64
+import datetime
+import json
 import sys
-import plotly.colors
-
-from importlib.resources import files, as_file
+from importlib.resources import as_file, files
+from itertools import cycle
 from pathlib import Path
-from Bio import Phylo
-from typing import List, Optional, Literal
-import pandas as pd
-from bs4 import BeautifulSoup as bs
+from typing import Any, Literal
 
+import pandas as pd
+import plotly.colors
 import plotly.express as px
 import plotly.graph_objects as go
+from Bio import Phylo
+from bs4 import BeautifulSoup as bs
 
 # Set up html_res path:
 html_res = files('html_res')
 
 
-def read_in_tree(*,
-                 path_to_tree: str | os.PathLike,
-                 outgroup: str = None,
-                 tree_format: Literal["newick", "nexus", "nexml", "phyloxml", "cdao"] = None):
+def read_in_tree(
+    *,
+    path_to_tree: str | Path,
+    outgroup: str | None = None,
+    tree_format: Literal['newick', 'nexus', 'nexml', 'phyloxml', 'cdao'] = 'newick',
+):
     """
     Parse tree using Bio.Phylo.read.
     :param path_to_tree: path to tree file.
@@ -31,8 +32,6 @@ def read_in_tree(*,
     :return: tree - class instance of Bio.Phylo.<tree_format>.Tree. For the default Newick tree, this returns
     Bio.Phylo.Newick.Tree object.
     """
-    if not tree_format:
-        tree_format = 'newick'
     tree = Phylo.read(path_to_tree, tree_format)
     if outgroup:
         tree.root_with_outgroup({'name': outgroup})
@@ -40,8 +39,7 @@ def read_in_tree(*,
     return tree
 
 
-def read_in_metadata(path_to_metadata: str | os.PathLike,
-                     id_column: str = None) -> tuple[pd.DataFrame, str]:
+def read_in_metadata(path_to_metadata: str | Path, id_column: str | None = None) -> tuple[pd.DataFrame, str]:
     """
     Read in metadata and read with Pandas - all cells should be strings.
     Change the id_column to "ID" and make sure there are no other ID columns.
@@ -52,14 +50,14 @@ def read_in_metadata(path_to_metadata: str | os.PathLike,
     if not id_column or id_column not in metadata_df.columns.values:
         id_column = metadata_df.columns.values[0]
     # Check if there are any other columns called "ID":
-    if "ID" in metadata_df.columns.values and metadata_df.columns.values[0] != "ID":
-        metadata_df.rename(columns={"ID": "other_id_x"}, inplace=True)
-    new_id_column = "ID"
+    if 'ID' in metadata_df.columns.values and metadata_df.columns.values[0] != 'ID':
+        metadata_df.rename(columns={'ID': 'other_id_x'}, inplace=True)
+    new_id_column = 'ID'
     metadata_df.rename(columns={id_column: new_id_column}, inplace=True)
     return metadata_df, new_id_column
 
 
-def read_in_snp_dist_matrix(path_to_snp_dists: str | os.PathLike) -> pd.DataFrame:
+def read_in_snp_dist_matrix(path_to_snp_dists: str | Path) -> pd.DataFrame:
     """
     Read in snp distance matrix using pandas. The row names and column names should match, and should be parsed as
     strings.
@@ -72,12 +70,14 @@ def read_in_snp_dist_matrix(path_to_snp_dists: str | os.PathLike) -> pd.DataFram
     return snpdist_matrix
 
 
-def check_ids(*,
-              tree,
-              metadata: pd.DataFrame,
-              id_column: str = 'ID',
-              snp_dists: pd.DataFrame,
-              ignore_ids: Optional[list | str] = None) -> pd.DataFrame:
+def check_ids(
+    *,
+    tree,
+    metadata: pd.DataFrame,
+    id_column: str = 'ID',
+    snp_dists: pd.DataFrame,
+    ignore_ids: list | str | None = None,
+) -> pd.DataFrame:
     """
     If a sample ID occurs in the tree, it must have metadata and snp distances (unless it is an ignored_id
     like the outgroup)
@@ -104,34 +104,28 @@ def check_ids(*,
             # Handle whether ignore ids is a list of samples or one sample:
             if isinstance(ignore_ids, list):
                 if sample in ignore_ids:
-                    print(f"Allowing {sample}")
+                    print(f'Allowing {sample}')
                     continue
-            elif isinstance(ignore_ids, str):
-                if sample == ignore_ids:
-                    print(f"Allowing {sample}")
-                    continue
+            elif isinstance(ignore_ids, str) and sample == ignore_ids:
+                print(f'Allowing {sample}')
+                continue
         # If sample is in tree but not in snpdists - this is critical failure - exit:
         if sample not in samples_in_snpdists:
-            sys.exit(f"Error: \n "
-                     f"Sample ID {sample} occurs in tree but not in snp distance matrix. \n"
-                     f"Exiting...")
+            sys.exit(f'Error: \n Sample ID {sample} occurs in tree but not in snp distance matrix. \nExiting...')
         # If sample is in tree but not in metadata - this is critical failure - exit
         elif sample not in samples_in_metadata:
-            sys.exit(f"Error: \n "
-                     f"Sample ID {sample} occurs in tree but not in the metadata. \n"
-                     f"Exiting...")
+            sys.exit(f'Error: \n Sample ID {sample} occurs in tree but not in the metadata. \nExiting...')
     # If a sample is in the metadata but not in the tree, drop sample:
     for sample in samples_in_metadata:
         # Again, check for ignore ids:
         if ignore_ids:
             if isinstance(ignore_ids, list):
                 if sample in ignore_ids:
-                    print(f"Allowing {sample}")
+                    print(f'Allowing {sample}')
                     continue
-            elif isinstance(ignore_ids, str):
-                if sample == ignore_ids:
-                    print(f"Allowing {sample}")
-                    continue
+            elif isinstance(ignore_ids, str) and sample == ignore_ids:
+                print(f'Allowing {sample}')
+                continue
         if sample not in samples_in_tree:
             metadata = metadata[metadata[id_column] != sample]
             return metadata
@@ -142,6 +136,7 @@ def check_ids(*,
 # structures. These functions are based on the same named `get_x_coordinates()`, `get_y_coordinates()` functions in
 # Biopython: https://github.com/biopython/biopython/blob/master/Bio/Phylo/_utils.py.
 # (They assign cartesian coordinates to the tree nodes.)
+
 
 def get_x_coordinates(input_tree) -> dict:
     """
@@ -168,15 +163,14 @@ def get_y_coordinates(input_tree, dist=0.1) -> dict:
     :return: a dict of clade: y-coord.
     """
     _max_height = input_tree.count_terminals()  # Counts the number of tree leaves.
-    ycoords = dict((leaf, (_max_height - ind) * dist) for ind, leaf in enumerate(reversed(input_tree.get_terminals())))
+    ycoords = {leaf: (_max_height - ind) * dist for ind, leaf in enumerate(reversed(input_tree.get_terminals()))}
 
     def calc_row(clade):
-        """ Recursively add all parental nodes to terminal leaves."""
+        """Recursively add all parental nodes to terminal leaves."""
         for subclade in clade:
             if subclade not in ycoords:
                 calc_row(subclade)
-        ycoords[clade] = (ycoords[clade.clades[0]] +
-                          ycoords[clade.clades[-1]]) / 2
+        ycoords[clade] = (ycoords[clade.clades[0]] + ycoords[clade.clades[-1]]) / 2
 
     if input_tree.root.clades:
         calc_row(input_tree.root)
@@ -184,9 +178,16 @@ def get_y_coordinates(input_tree, dist=0.1) -> dict:
     return ycoords
 
 
-def get_clade_lines(orientation: str = 'horizontal', y_curr: str = "0", x_start: str = "0", x_curr: str = "0",
-                    y_bot: str = "0", y_top: str = "0", line_colour: str = 'rgb(25,25,25)',
-                    line_width: float = 0.5) -> dict:
+def get_clade_lines(
+    orientation: str = 'horizontal',
+    y_curr: str = '0',
+    x_start: str = '0',
+    x_curr: str = '0',
+    y_bot: str = '0',
+    y_top: str = '0',
+    line_colour: str = 'rgb(25,25,25)',
+    line_width: float = 0.5,
+) -> dict:
     """
     Define a Plotly shape of type 'line', for each branch
     :param orientation: horizontal or vertical.
@@ -199,29 +200,26 @@ def get_clade_lines(orientation: str = 'horizontal', y_curr: str = "0", x_start:
     :param line_width: line width, default is 0.5.
     :return: dict of information for line.
     """
-    branch_line = dict(type='line',
-                       layer='below',
-                       line=dict(color=line_colour,
-                                 width=line_width)
-                       )
+    branch_line = {'type': 'line', 'layer': 'below', 'line': {'color': line_colour, 'width': line_width}}
     if orientation == 'horizontal':
-        branch_line.update(x0=x_start,
-                           y0=y_curr,
-                           x1=x_curr,
-                           y1=y_curr)
+        branch_line.update(x0=x_start, y0=y_curr, x1=x_curr, y1=y_curr)
     elif orientation == 'vertical':
-        branch_line.update(x0=x_curr,
-                           y0=y_bot,
-                           x1=x_curr,
-                           y1=y_top)
+        branch_line.update(x0=x_curr, y0=y_bot, x1=x_curr, y1=y_top)
     else:
         raise ValueError("Line type can be 'horizontal' or 'vertical'")
 
     return branch_line
 
 
-def draw_clade(clade, x_coords: dict, y_coords: dict, line_shapes: List[dict], x_start: str = "0",
-               line_colour: str = 'rgb(15,15,15)', line_width: int = 1):
+def draw_clade(
+    clade,
+    x_coords: dict,
+    y_coords: dict,
+    line_shapes: list[dict],
+    x_start: str = '0',
+    line_colour: str = 'rgb(15,15,15)',
+    line_width: int = 1,
+):
     """
     Recursively define the tree lines (branches), starting from the argument clade.
     :param y_coords: dict of x-coordinates.
@@ -237,12 +235,14 @@ def draw_clade(clade, x_coords: dict, y_coords: dict, line_shapes: List[dict], x
     y_curr = y_coords[clade]
 
     # Draw a horizontal line
-    branch_line = get_clade_lines(orientation='horizontal',
-                                  y_curr=y_curr,
-                                  x_start=x_start,
-                                  x_curr=x_curr,
-                                  line_colour=line_colour,
-                                  line_width=line_width)
+    branch_line = get_clade_lines(
+        orientation='horizontal',
+        y_curr=y_curr,
+        x_start=x_start,
+        x_curr=x_curr,
+        line_colour=line_colour,
+        line_width=line_width,
+    )
 
     line_shapes.append(branch_line)
 
@@ -251,12 +251,16 @@ def draw_clade(clade, x_coords: dict, y_coords: dict, line_shapes: List[dict], x
         y_top = y_coords[clade.clades[0]]
         y_bot = y_coords[clade.clades[-1]]
 
-        line_shapes.append(get_clade_lines(orientation='vertical',
-                                           x_curr=x_curr,
-                                           y_bot=y_bot,
-                                           y_top=y_top,
-                                           line_colour=line_colour,
-                                           line_width=line_width))
+        line_shapes.append(
+            get_clade_lines(
+                orientation='vertical',
+                x_curr=x_curr,
+                y_bot=y_bot,
+                y_top=y_top,
+                line_colour=line_colour,
+                line_width=line_width,
+            )
+        )
 
         # Draw descendants
         for child in clade:
@@ -275,96 +279,97 @@ def get_nearest_neighbours(snp_distances: pd.DataFrame, node: str, *, do_join: b
         snp_distances = snp_distances.drop(node)  # drop row that contains itself, as minimum will always be itself
     except KeyError:
         # If the ID is in the metadata but is not in the snp_dist matrix:
-        return ""
-    nearest = list(
-        snp_distances[
-            snp_distances[node] == snp_distances[node].min()
-            ]
-        .index
-    )
+        return ''
+    nearest = list(snp_distances[snp_distances[node] == snp_distances[node].min()].index)
     nearest_neighbours = []
     for neighbour in nearest:
         try:
             neighbour_distance = int(snp_distances[node].loc[neighbour])
         except TypeError:
-            print(f"Issues with snp distance matrix - check sample {node} only occurs once in the matrix: "
-                  f"{snp_distances[node].loc[neighbour]}")
+            print(
+                f'Issues with snp distance matrix - check sample {node} only occurs once in the matrix: '
+                f'{snp_distances[node].loc[neighbour]}'
+            )
             sys.exit()
         nearest_neighbours.append(f'{neighbour}={neighbour_distance}')  # format nicely to give distance in SNPs
 
     if do_join:
-        return "<br>".join(nearest_neighbours)  # for html
+        return '<br>'.join(nearest_neighbours)  # for html
     else:
         return nearest_neighbours
 
 
-def make_hover_text(metadata_df: pd.DataFrame,
-                    id_column: str,
-                    node_list: list) -> list:
+def make_hover_text(metadata_df: pd.DataFrame, id_column: str, node_list: list) -> dict:
     """
     Make the hover text for the plotly interactive plot. This will create a pop-up box on hover over a node.
     :param metadata_df: the Pandas dataframe of metadata, must have default numerical index names.
     :param id_column: name of column in metadata that corresponds to taxa in tree (str).
     :param node_list: list of nodes in order of appearance in the tree.
-    :return: list of hover text.
+    :return: dict of clade name as key and hover text as value.
     """
-    # For each row in the metadata field with the index, get the index in text list
-    hover_text = node_list.copy()
-    for df_index, sample_id in enumerate(metadata_df[id_column]):
-        for index, node_name in enumerate(hover_text):
-            if node_name is not None and node_name.startswith(sample_id):
-                node_index = index
-                # Only keep entries in the metadata that match in the tree
+    # For each row in the metadata, use the ID as the clade name key
+    hover_text: dict = {}
+    for node_name in node_list:
+        hover_text[node_name] = node_name
+        if node_name is not None:
+            # Only keep entries in the metadata that match in the tree
+            row = metadata_df.loc[metadata_df[id_column] == node_name]
+            if not row.empty:
                 metadata_list = [
-                    f'{column_name}: {metadata_df.loc[df_index, column_name]}<br>' for column_name in
-                    metadata_df.columns.values
+                    f'{column_name}: {row[column_name].values[0]}<br>' for column_name in metadata_df.columns.values
                 ]
-                hover_text[node_index] = hover_text[node_index] + "<br>" + str("".join(metadata_list))
+                hover_text[node_name] = hover_text[node_name] + '<br>' + str(''.join(metadata_list))
+
     return hover_text
 
 
-def get_colourings(metadata_df: pd.DataFrame,
-                   id_column: str,
-                   category: str,
-                   number_of_nodes: int,
-                   node_list: list,
-                   intermediate_node_colour: str = 'rgb(100,100,100)') -> list:
+def get_colourings(
+    metadata_df: pd.DataFrame,
+    id_column: str,
+    category: str,
+    node_list: list,
+    intermediate_node_colour: str = 'rgb(100,100,100)',
+) -> dict:
     """
     For a given column in the metadata dataframe provided, create a list of colours (strings) such that each unique
-    item in that column (category) is given its own colour. Categories (columns) with more than 48 unique items are not
-    given colours and are not made available to colour the nodes (reasoning: >48 colours is difficult to visualise).
+    item in that column (category) is given a colour. There are 48 unique colours, colours are cycled by default.
 
     :param metadata_df: the Pandas dataframe of metadata.
     :param id_column: the id column, automatically detected in the metadata dataframe.
     :param category: the column name to be coloured from the Pandas dataframe.
-    :param number_of_nodes: number of nodes
     :param node_list: list of nodes
-    :param intermediate_node_colour: colour for intermediate nodes (default = grey).
-    :return: list of colours for each node in the order that the nodes occur.
+    :param intermediate_node_colour: colour for nodes with no metadata entry (default = rgb(100,100,100)).
+    :return: dict of node name (ID or clade name) as key and colour as value.
     """
     # Create list of colours - use plotly built in, for total of 48 unique colours.
-    available_colours = px.colors.qualitative.Dark24 + px.colors.qualitative.Light24
+    available_colours: list[str] = px.colors.qualitative.Dark24 + px.colors.qualitative.Light24
     # Make the column all str type to allow sorting
     metadata_df[category] = metadata_df[category].astype(str)
     # Create a dict and assign each value in the category a different colour (sort list to keep colours consistent).
-    colouring_dict = dict(zip(sorted(list(set(metadata_df[category]))), available_colours))
-    # Create the list of colours - the list is as long as the number of nodes in the tree.
-    list_of_colours = [intermediate_node_colour] * int(number_of_nodes)
+    colouring_dict: dict[Any, str] = dict(
+        zip(sorted(set(metadata_df[category])), cycle(available_colours), strict=False)
+    )
+    # Create the dict to store node and the colour
+    node_colours: dict = {}
     # For each row in the metadata field with the index, get the index in text list
-    for df_index, sample_id in enumerate(metadata_df[id_column]):
-        for index, node_name in enumerate(node_list):
-            if node_name is not None and node_name.startswith(sample_id):
-                # Only colour entries in the metadata that match in the tree
-                list_of_colours[index] = (colouring_dict[metadata_df.loc[df_index, category]])
-    return list_of_colours
+    for node_name in node_list:
+        if node_name is not None:
+            node_category = metadata_df.loc[metadata_df[id_column] == node_name, category]
+            if node_category.empty:
+                node_colours[node_name] = intermediate_node_colour
+            else:
+                node_colours[node_name] = colouring_dict[node_category.values[0]]
+
+    return node_colours
 
 
-def get_continuous_colourings(metadata_df: pd.DataFrame,
-                              id_column: str,
-                              date_category: str,
-                              number_of_nodes: int,
-                              node_list: list,
-                              intermediate_node_colour: str = 'rgb(100,100,100)') -> list:
+def get_continuous_colourings(
+    metadata_df: pd.DataFrame,
+    id_column: str,
+    date_category: str,
+    node_list: list,
+    intermediate_node_colour: str = 'rgb(100,100,100)',
+) -> dict:
     """
     For a date column, create a list of colours (in rgb) such that dates are coloured in a gradient. Newest date is
     coloured in royal blue, through to the oldest date in maroon red.
@@ -372,24 +377,22 @@ def get_continuous_colourings(metadata_df: pd.DataFrame,
     :param metadata_df: the Pandas dataframe of metadata.
     :param id_column: the id column, automatically detected in the metadata dataframe.
     :param date_category: the name of the column that contained dates to be coloured in a gradient from the metadata.
-    :param number_of_nodes: number of nodes
     :param node_list: list of nodes
-    :param intermediate_node_colour: colour for intermediate nodes (default = grey).
-    :return: list of colours for each node in the order that the nodes occur.
+    :param intermediate_node_colour: colour for intermediate nodes, use RGBA (default = grey but opacaity 0).
+    :return: dict with calde name/ID as key, and node colour as value.
     """
     # Copy metadata:
     metadata_copy = metadata_df.copy()
     # Make date column actually dates, set anything not a date to not a time, drop later.
-    metadata_copy[date_category] = pd.to_datetime(metadata_copy[date_category],
-                                                  errors='coerce',
-                                                  format='mixed',
-                                                  yearfirst=True,
-                                                  dayfirst=True)
+    metadata_copy[date_category] = pd.to_datetime(
+        metadata_copy[date_category], errors='coerce', format='mixed', yearfirst=True, dayfirst=True
+    )
     # If all dates are empty, assign all nodes to black (rgb(0, 0, 0):
-    if len(metadata_copy[date_category].unique()) == 1 \
-            and any([pd.isna(i) for i in metadata_copy[date_category].unique()]):
+    if len(metadata_copy[date_category].unique()) == 1 and any(
+        pd.isna(i) for i in metadata_copy[date_category].unique()
+    ):
         metadata_copy['date_delta'] = metadata_copy[date_category].apply(lambda x: '0')
-        gradient_colouring_dict = dict([('0', 'rgb(0, 0, 0)')])
+        gradient_colouring_dict = {'0': 'rgb(0, 0, 0)'}
     # Dates will be given a colour ranging from maroon (most recent) to royal blue (oldest).
     # If there is only one date all samples will be maroon (rgb(0, 0, 151)). Any empty dates get black (rgb(0, 0, 0)).
     else:
@@ -406,38 +409,44 @@ def get_continuous_colourings(metadata_df: pd.DataFrame,
         # Make dict of colours based on the date delta:
         date_deltas = sorted(metadata_copy['date_delta'].dropna().to_list())
         colour_gradient = plotly.colors.sample_colorscale('Jet', date_deltas)
-        gradient_colouring_dict = dict(zip(date_deltas, colour_gradient))
+        gradient_colouring_dict = dict(zip(date_deltas, colour_gradient, strict=False))
         # Replace NaN with 'no_date' and add to dict to return black:
         metadata_copy['date_delta'] = metadata_copy['date_delta'].fillna('no_date')
         gradient_colouring_dict['no_date'] = 'rgb(0, 0, 0)'
-    # Create the list of colours - the list is as long as the number of nodes in the tree.
-    list_of_gradient_colours = [intermediate_node_colour] * int(number_of_nodes)
-    # For each row in the metadata field with the index, get the index in text list
-    for df_index, sample_id in enumerate(metadata_copy[id_column]):
-        for index, node_name in enumerate(node_list):
-            if node_name is not None and node_name.startswith(sample_id):
-                # Only colour entries in the metadata that match in the tree
-                list_of_gradient_colours[index] = (gradient_colouring_dict[metadata_copy.loc[df_index, 'date_delta']])
-    return list_of_gradient_colours
+
+    # Create the list of colours as lookup dict
+    gradient_colours: dict = {}
+
+    # For each node, get the gradient colour  in the metadata field with the index, get the index in text list
+    for node_name in node_list:
+        if node_name is not None:
+            # Only colour entries in the metadata that match in the tree
+            date_delta = metadata_copy.loc[metadata_copy[id_column] == node_name, 'date_delta']
+            if date_delta.empty:
+                gradient_colours[node_name] = intermediate_node_colour
+            else:
+                gradient_colours[node_name] = gradient_colouring_dict[date_delta.values[0]]
+
+    return gradient_colours
 
 
-def inline_html_images(html_res_path: os.PathLike | str, input_html: str) -> str:
+def inline_html_images(html_res_path: Path | str, input_html: str) -> str:
     input_html_path = Path(html_res_path, input_html)
     html_str = input_html_path.read_text()
-    soup = bs(html_str, features="lxml")
-    image_tags = soup.findAll("img")
+    soup = bs(html_str, features='lxml')
+    image_tags = soup.findAll('img')
 
     for tag in image_tags:
         # get the relative location of the image file,
         # read as bytes and encode as base64
-        b64_img = base64.b64encode(Path(html_res_path).joinpath(Path(tag.get("src"))).read_bytes()).decode("utf-8")
+        b64_img = base64.b64encode(Path(html_res_path).joinpath(Path(tag.get('src'))).read_bytes()).decode('utf-8')
         # change the src attribute to the b64 encoded str
-        tag["src"] = f"data:image/png;base64,{b64_img}"
+        tag['src'] = f'data:image/png;base64,{b64_img}'
 
     return str(soup)
 
 
-def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str:
+def generate_html(html_res_path: Path | str, input_fig: go.Figure) -> str:
     """
     Takes in a plotly figure, reads some resources from the html_res directory and generates a static HTML string as
     output.
@@ -451,7 +460,9 @@ def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8"/>
         <title>Intreeactive report (generated: {datetime.datetime.now()})</title>
-        <link rel="icon" href="data:image/png;base64,{base64.encodebytes(Path(html_res_path, 'favicon.png').read_bytes()).decode('utf-8')}" />
+        <link rel="icon" href="data:image/png;base64,{
+        base64.encodebytes(Path(html_res_path, 'favicon.png').read_bytes()).decode('utf-8')
+    }" />
         <style>
             {Path(html_res_path, 'main.css').read_text()}
         </style>
@@ -462,9 +473,9 @@ def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str
     <body>
         <div id="leftPanel">
                 {
-    input_fig.to_html(
-        full_html=False,
-    )
+        input_fig.to_html(
+            full_html=False,
+        )
     }
         </div>
         <div id="rightPanel">
@@ -527,18 +538,21 @@ def generate_html(html_res_path: os.PathLike | str, input_fig: go.Figure) -> str
     <script>
         {Path(html_res_path, 'main.js').read_text()}
     </script>
-</html>"""
+</html>"""  # noqa: E501
 
     return return_html
 
 
-def write_interactive_tree(*,
-                           tree,
-                           output_name: str | os.PathLike,
-                           metadata: pd.DataFrame,
-                           id_column: str = 'ID',
-                           snp_distance_matrix: pd.DataFrame,
-                           title: str = None) -> None:
+def write_interactive_tree(
+    *,
+    tree,
+    output_name: str | Path,
+    metadata: pd.DataFrame,
+    id_column: str = 'ID',
+    snp_distance_matrix: pd.DataFrame,
+    exclude_internal_nodes: bool = False,
+    title: str | None = None,
+) -> None:
     """
     Create an interactive phylogeny (html) file for a given phylogeny file.
     :param tree: Bio Phylo Tree object.
@@ -553,11 +567,10 @@ def write_interactive_tree(*,
     """
     ##################
     # Set up:
-    print(f'Creating Tree \'{title}\'... \n Number of leaves: {len(list(tree.get_terminals()))}')
+    print(f"Creating Tree '{title}'... \n Number of leaves: {len(list(tree.get_terminals()))}")
 
     # Add nearest neighbours to the metadata dataframe
-    metadata["Nearest_neighbour"] = metadata[id_column].apply(
-        lambda x: get_nearest_neighbours(snp_distance_matrix, x))
+    metadata['Nearest_neighbour'] = metadata[id_column].apply(lambda x: get_nearest_neighbours(snp_distance_matrix, x))
 
     ###########
     # 1. Get x and y coordinated for the tree
@@ -569,109 +582,147 @@ def write_interactive_tree(*,
     # Set the line shapes for each node and leaf in the tree, ready for Plotly to plot:
     tree_line_shapes = []
 
-    draw_clade(clade=tree.root,
-               x_coords=tree_x_coords,
-               y_coords=tree_y_coords,
-               line_shapes=tree_line_shapes,
-               line_colour='rgb(25,25,25)',
-               line_width=1)
+    draw_clade(
+        clade=tree.root,
+        x_coords=tree_x_coords,
+        y_coords=tree_y_coords,
+        line_shapes=tree_line_shapes,
+        line_colour='rgb(25,25,25)',
+        line_width=1,
+    )
 
     # Combine all the shapes into one SVG path
     svg_path = []
     for record_dict in tree_line_shapes:
-        svg_path.append(
-            f"M {record_dict['x0']} {record_dict['y0']} L {record_dict['x1']} {record_dict['y1']}")
-    svg_path = " ".join(svg_path)
+        svg_path.append(f'M {record_dict["x0"]} {record_dict["y0"]} L {record_dict["x1"]} {record_dict["y1"]}')
+    svg_path = ' '.join(svg_path)
 
     ###########
-    # 3. Create the text for the hover text
-    # Get the node coordinates:
+    # 3. get the node coordinates
     my_tree_clades = tree_x_coords.keys()
-    x_nodes = []  # list of nodes x-coordinates
-    y_nodes = []  # list of nodes y-coordinates
-    node_list = []  # list of nodes as they appear in order in the tree
 
+    # Make the node list here to make sure all of the internal
+    node_list: list[str] = []
+
+    clade_nodes_and_colours: dict = {}
     for clade in my_tree_clades:
-        x_nodes.append(tree_x_coords[clade])
-        y_nodes.append(tree_y_coords[clade])
+        if not clade.name:
+            clade.name = 'unlabelled'
         node_list.append(clade.name)
+        clade_nodes_and_colours[clade] = {
+            'x': tree_x_coords[clade],
+            'y': tree_y_coords[clade],
+            'is_terminal': clade.is_terminal(),
+            'colour': 'rgb(0,0,0)' if clade.is_terminal() else 'rgb(100,100,100)',  # black if terminal else grey
+        }
 
-    hover_text = make_hover_text(metadata, id_column, node_list)
+    ##########
+    # 3.5 Create the text for the hover text and add to the dict
+    hover_text: dict[str, str] = make_hover_text(metadata_df=metadata, id_column=id_column, node_list=node_list)
+
+    for clade, info in clade_nodes_and_colours.items():
+        info['hover_text'] = '' if clade.name == 'unlabelled' else hover_text[clade.name]
 
     ###########
-    # 4. Set colours for the nodes - select a suitable column from the metadata:
-    # get the default category to colour on first:
-    count = 1
-    default_category = ""
-    while count <= len(metadata.columns.values):
-        if len(set(metadata[metadata.columns.values[count]])) <= 48:
-            default_category = metadata.columns.values[count]
-            break
+    # 4. Set colours for the nodes for each category, and add to the dict with the column name as the key.
+    # Store the colour to clade mapping dict in a dict of colourings to add to the main plotting dict later.
+
+    column_colourings = {}
+
+    for category_to_colour in metadata.columns.values:
+        # the ID column in the only one that can have non-unique colours:
+        if category_to_colour == id_column:
+            column_colourings[id_column] = get_colourings(
+                metadata_df=metadata,
+                id_column=id_column,
+                category=id_column,
+                node_list=node_list,
+            )
+        elif 'date' in category_to_colour.lower():
+            column_colourings[category_to_colour] = get_continuous_colourings(
+                metadata_df=metadata,
+                id_column=id_column,
+                date_category=category_to_colour,
+                node_list=node_list,
+            )
         else:
-            count += 1
+            list_of_categories = sorted(set(metadata[category_to_colour]))
+            if len(list_of_categories) <= 48:
+                column_colourings[category_to_colour] = get_colourings(
+                    metadata_df=metadata,
+                    id_column=id_column,
+                    category=category_to_colour,
+                    node_list=node_list,
+                )
 
-    colourings = get_colourings(metadata_df=metadata,
-                                id_column=id_column,
-                                category=default_category,
-                                number_of_nodes=len(x_nodes),
-                                node_list=node_list)
+    # Add the colours to the dict for the id column
+    for clade, node_info in clade_nodes_and_colours.items():
+        for column, colour_mapping in column_colourings.items():
+            node_info[column] = colour_mapping[clade.name]
 
-    ###########
+    # ###########
     # 5. Create traces for plotly plot - These are the nodes.
-    trace = go.Scattergl(x=x_nodes,
-                         y=y_nodes,
-                         mode='markers',
-                         marker=dict(color=colourings,
-                                     size=10),
-                         opacity=1.0,
-                         text=hover_text,
-                         hoverinfo='text')
+    # If exclude_internal is true, filter the dict of things to plot.
+    clade_nodes_to_plot = clade_nodes_and_colours.copy()
+    # Make a new dict to plot to allow filtering
+    if exclude_internal_nodes:
+        no_internal_node_list = []
+        for clade, value in clade_nodes_and_colours.items():
+            if value['is_terminal']:
+                no_internal_node_list.append(clade.name)
+            else:
+                clade_nodes_to_plot.pop(clade)
+
+    # Make lists of the x and y coords, colours, hover text and node list ready to give to plotly.
+    x_nodes: list[float] = []
+    y_nodes: list[float] = []
+    node_colours: list[str] = []
+    node_hover_text: list[str] = []
+    node_list_to_plot: list[str] = []
+
+    for clade, info in clade_nodes_to_plot.items():
+        x_nodes.append(info['x'])
+        y_nodes.append(info['y'])
+        node_colours.append(info[id_column])
+        node_hover_text.append(info['hover_text'])
+        node_list_to_plot.append(clade.name)
+
+    trace = go.Scattergl(
+        x=x_nodes,
+        y=y_nodes,
+        mode='markers',
+        marker={'color': node_colours, 'size': 10},
+        text=node_hover_text,
+        hoverinfo='text',
+    )
 
     ###########
     # 6. Create the drop-down functionality
     # Add a fancy drop_down list to change the node colours in the interactive tree:
-    drop_down_update = list([dict(
-        buttons=[],
-        direction='down',
-        pad={'r': 10, 't': 10},
-        showactive=True,
-        x=1.01,
-        xanchor='right',
-        y=1.075,
-        yanchor='top'
-    )
-    ])
+    # the buttons is a list of dicts with label, method and arg for each drop down option.
+    drop_down_update = [
+        {
+            'buttons': [],
+            'direction': 'down',
+            'pad': {'r': 10, 't': 10},
+            'showactive': True,
+            'x': 1.01,
+            'xanchor': 'right',
+            'y': 1.15,
+            'yanchor': 'top',
+        }
+    ]
 
     # Create a colour list for every column in the metadata dataframe if >=48 things to colour:
-    for category_to_colour in metadata.columns.values:
-        if "date" in category_to_colour.lower():
-            drop_down_update_dict = dict(label=category_to_colour,
-                                         method='update',
-                                         args=[{'marker.color': [
-                                             get_continuous_colourings(
-                                                 metadata_df=metadata,
-                                                 id_column=id_column,
-                                                 date_category=category_to_colour,
-                                                 number_of_nodes=len(x_nodes),
-                                                 node_list=node_list
-                                             )]}]
-                                         )
-            drop_down_update[0]['buttons'].append(drop_down_update_dict)
-        else:
-            list_of_categories = sorted(list(set(metadata[category_to_colour])))
-            if len(list_of_categories) <= 48:
-                drop_down_update_dict = dict(label=category_to_colour,
-                                             method='update',
-                                             args=[{'marker.color': [
-                                                 get_colourings(
-                                                     metadata_df=metadata,
-                                                     id_column=id_column,
-                                                     category=category_to_colour,
-                                                     number_of_nodes=len(x_nodes),
-                                                     node_list=node_list
-                                                 )]}]
-                                             )
-                drop_down_update[0]['buttons'].append(drop_down_update_dict)
+    for category_to_colour in column_colourings:
+        drop_down_update_dict = {
+            'label': category_to_colour,
+            'method': 'update',
+            'args': [
+                {'marker.color': [[clade_nodes_to_plot[clade][category_to_colour] for clade in clade_nodes_to_plot]]}
+            ],
+        }
+        drop_down_update[0]['buttons'].append(drop_down_update_dict)
 
     ###########
     # 7. Add layout to plotly plot - add the lines between nodes.
@@ -679,50 +730,44 @@ def write_interactive_tree(*,
     if title:
         graph_title = f'{title}; (n={len(list(tree.get_terminals()))})'
     else:
-        graph_title = f"Interactive Tree - {datetime.datetime.now()}"
+        graph_title = f'Interactive Tree - {datetime.datetime.now()}'
 
     # The branches are already defined and stored as Plotly shapes that are included in the plot layout below:
-    layout = go.Layout(title=dict(text=graph_title, yanchor='top', y=0.95),
-                       font=dict(family='Arial', size=14),
-                       showlegend=False,
-                       autosize=True,
-                       xaxis=dict(showline=True,
-                                  zeroline=False,
-                                  showgrid=False,
-                                  ticklen=4,
-                                  showticklabels=True,
-                                  title='Branch Length'),
-                       yaxis=dict(visible=False),
-                       hovermode='closest',
-                       plot_bgcolor='rgb(250,250,250)',
-                       margin=dict(l=10, t=150),
-                       # shapes=tree_line_shapes,  # lines for tree branches
-                       updatemenus=drop_down_update  # This adds the drop-down menu to change the node colours.
-                       )
+    layout = go.Layout(
+        title={'text': graph_title, 'yanchor': 'top', 'y': 0.95},
+        font={'family': 'Arial', 'size': 14},
+        showlegend=False,
+        autosize=True,
+        xaxis={
+            'showline': True,
+            'zeroline': False,
+            'showgrid': False,
+            'ticklen': 4,
+            'showticklabels': True,
+            'title': 'Branch Length',
+        },
+        yaxis={'visible': False},
+        hovermode='closest',
+        plot_bgcolor='rgb(250,250,250)',
+        margin={'l': 10, 't': 150},
+        # shapes=tree_line_shapes,  # lines for tree branches
+        updatemenus=drop_down_update,  # This adds the drop-down menu to change the node colours.
+    )
 
     fig = go.Figure(data=[trace], layout=layout)
 
     # Add in the SVG path
-    fig.update_layout(
-        shapes=[
-            dict(
-                type="path",
-                path=svg_path,
-                line_color="rgb(25,25,25)",
-                layer="below"
-            )
-        ]
-    )
+    fig.update_layout(shapes=[{'type': 'path', 'path': svg_path, 'line_color': 'rgb(25,25,25)', 'layer': 'below'}])
 
     # Add text annotations as a separate trace
     fig.add_trace(
         go.Scattergl(
             x=x_nodes,
             y=y_nodes,
-            mode="text",
-            text=[f"\t\t\t{x.split('<br>')[0]}" if x else "" for x in hover_text],
-            textposition="middle right",
-            visible=False
+            mode='text',
+            text=[f'\t\t\t{x.split("<br>")[0]}' if x else '' for x in hover_text],
+            textposition='middle right',
+            visible=False,
         )
     )
 
@@ -730,11 +775,11 @@ def write_interactive_tree(*,
     # 8. Jsonify data for javascript shenanigans
     metadata.index = metadata[id_column]
     # split NN data back out into an array
-    metadata["Nearest_neighbour"] = metadata["Nearest_neighbour"].apply(lambda x: x.split("<br>"))
+    metadata['Nearest_neighbour'] = metadata['Nearest_neighbour'].apply(lambda x: x.split('<br>'))
 
     # basket case to make sure we have normal jsonable types instead of weird numpy types
-    matrix_json = json.loads(snp_distance_matrix.to_json(orient="split"))
-    del matrix_json["columns"]
+    matrix_json = json.loads(snp_distance_matrix.to_json(orient='split'))
+    del matrix_json['columns']
 
     # Technically we only need ~half the data because snp_dist(A,B) == snp_dist(B,A) but we're keeping all of it for now
     matrix_json = json.dumps(matrix_json)
@@ -746,20 +791,17 @@ def write_interactive_tree(*,
 
     # Write out the datasets to a javascript file -
     with as_file(files('html_res')) as html_res_path:
-        with open(html_res_path / "tempmetadata.js", "w", encoding="utf-8") as outfile:
+        with open(html_res_path / 'tempmetadata.js', 'w', encoding='utf-8') as outfile:
             # write out the metadata
-            outfile.write("const inputMetadata = ")
-            outfile.write(metadata.to_json(
-                indent=4,
-                orient="index"
-            ))
-            outfile.write("\n\n")
+            outfile.write('const inputMetadata = ')
+            outfile.write(metadata.to_json(indent=4, orient='index'))
+            outfile.write('\n\n')
 
             # write out the distance matrix
-            outfile.write("const inputSnpMatrix = ")
+            outfile.write('const inputSnpMatrix = ')
             outfile.write(matrix_json)
-            outfile.write("\n")
+            outfile.write('\n')
 
         # Write the html file
-        with open(f'{output_name}', "w", encoding="utf-8") as outfile:
+        with open(f'{output_name}', 'w', encoding='utf-8') as outfile:
             outfile.write(generate_html(html_res_path, fig))
