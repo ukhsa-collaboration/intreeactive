@@ -616,7 +616,6 @@ def write_interactive_tree(
             'colour': 'rgb(0,0,0)' if clade.is_terminal() else 'rgb(100,100,100)',  # black if terminal else grey
         }
 
-    print('node_list 1: ', len(node_list))
     ##########
     # 3.5 Create the text for the hover text and add to the dict
     hover_text: dict[str, str] = make_hover_text(metadata_df=metadata, id_column=id_column, node_list=node_list)
@@ -664,7 +663,6 @@ def write_interactive_tree(
     # ###########
     # 5. Create traces for plotly plot - These are the nodes.
     # If exclude_internal is true, filter the dict of things to plot.
-    print('length clade_nodes_and_colours: ', len(clade_nodes_and_colours))
     clade_nodes_to_plot = clade_nodes_and_colours.copy()
     # Make a new dict to plot to allow filtering
     if exclude_internal_nodes:
@@ -688,9 +686,6 @@ def write_interactive_tree(
         node_colours.append(info[id_column])
         node_hover_text.append(info['hover_text'])
         node_list_to_plot.append(clade.name)
-
-    print('length node list to plot: ', len(node_list_to_plot))
-    print('length clade_nodes_to_plot:', len(clade_nodes_to_plot))
 
     trace = go.Scattergl(
         x=x_nodes,
@@ -717,14 +712,6 @@ def write_interactive_tree(
             'yanchor': 'top',
         }
     ]
-
-    # Add the id column to the dropdown list:
-    id_drop_down = {
-        'label': id_column,
-        'method': 'update',
-        'args': [{'marker.color': [node_colours]}],
-    }
-    drop_down_update[0]['buttons'].append(id_drop_down)
 
     # Create a colour list for every column in the metadata dataframe if >=48 things to colour:
     for category_to_colour in column_colourings:
