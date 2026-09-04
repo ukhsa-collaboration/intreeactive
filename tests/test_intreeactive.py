@@ -107,28 +107,40 @@ def get_coords(coords_dict: dict, clade_name: str) -> float:
 
 
 # Tests
+def test_read_in_snp_dist_matrix_valuerror(snp_dist_matrix, tmp_path):
+    broken_snp_dist_matrix = snp_dist_matrix.drop('B', axis=1)
+
+    broken_snp_dist_matrix.to_csv(Path(tmp_path / 'broken_snp_dist_matrix.csv'))
+    with pytest.raises(
+        expected_exception=ValueError, match='The SNP distance matrix should be an all against all dataframe'
+    ):
+        intreeactive.read_in_snp_dist_matrix(Path(tmp_path / 'broken_snp_dist_matrix.csv'))
+
+
 def test_exit_if_sample_in_tree_but_not_in_snpdist_matrix(test_tree, metadata_with_neighbours, snp_dist_matrix):
     snp_dist_matrix = snp_dist_matrix.drop('A')
     snp_dist_matrix = snp_dist_matrix.drop('A', axis=1)
     print('\n  If sample is not in the snp distance matrix but is in the tree, it should exit.')
-    with pytest.raises(SystemExit):
+    with pytest.raises(intreeactive.IntreeactiveException) as e:
         intreeactive.check_ids(
-            tree=test_tree, metadata=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
+            tree=test_tree, metadata_df=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
         )
+    assert 'Sample ID(s) A occur(s) in tree but not in snp distance matrix' in str(e.value)
 
 
 def test_exit_if_sample_in_tree_but_not_in_metadata(test_tree, metadata_with_neighbours, snp_dist_matrix):
     metadata_with_neighbours = metadata_with_neighbours[metadata_with_neighbours['ID'] != 'A']
     print('\n  If sample is not in the metadata but is in the tree, it should exit.')
-    with pytest.raises(SystemExit):
+    with pytest.raises(intreeactive.IntreeactiveException) as e:
         intreeactive.check_ids(
-            tree=test_tree, metadata=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
+            tree=test_tree, metadata_df=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
         )
+    assert 'Sample ID(s) A occur(s) in tree but not in the metadata' in str(e.value)
 
 
 def test_check_ids_occur_where_needed(test_tree, metadata_with_neighbours, snp_dist_matrix):
     outcome = intreeactive.check_ids(
-        tree=test_tree, metadata=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
+        tree=test_tree, metadata_df=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
     )
     print(
         f'\n  Sample "O" is in the metadata but not in the tree, so should be dropped from the metadata: \n'
@@ -137,6 +149,17 @@ def test_check_ids_occur_where_needed(test_tree, metadata_with_neighbours, snp_d
     )
     assert outcome.size == 24
     assert 'O' not in outcome['ID'].to_list()
+
+
+def test_snp_dists_mismatch(test_tree, metadata_with_neighbours, snp_dist_matrix):
+    snp_dist_matrix = snp_dist_matrix.drop('A')
+    with pytest.raises(
+        expected_exception=intreeactive.IntreeactiveException,
+        match='The SNP distance matrix should be an all against all dataframe',
+    ):
+        intreeactive.check_ids(
+            tree=test_tree, metadata_df=metadata_with_neighbours, id_column=id_column, snp_dists=snp_dist_matrix
+        )
 
 
 def test_get_x_coordinates(test_tree):
@@ -586,6 +609,33 @@ def test_create_tree_x_axis_range(test_tree, metadata_with_neighbours, snp_dist_
         title='Test Tree',
         x_axis_range=[-20, 20],
     )
+
+
+def test_create_tree_broken_matrix_missing_row(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_path):
+    snp_dist_matrix = snp_dist_matrix.drop('A')
+    with pytest.raises(intreeactive.IntreeactiveException):
+        intreeactive.write_interactive_tree(
+            tree=test_tree,
+            output_name=Path(tmp_path / 'test_tree.html'),
+            metadata=metadata_with_neighbours,
+            id_column='ID',
+            snp_distance_matrix=snp_dist_matrix,
+            exclude_internal_nodes=False,
+            title='Test Tree',
+        )
+
+def test_create_tree_broken_matrix_missing_column(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_path):
+    snp_dist_matrix = snp_dist_matrix.drop('A', axis=1)
+    with pytest.raises(intreeactive.IntreeactiveException):
+        intreeactive.write_interactive_tree(
+            tree=test_tree,
+            output_name=Path(tmp_path / 'test_tree.html'),
+            metadata=metadata_with_neighbours,
+            id_column='ID',
+            snp_distance_matrix=snp_dist_matrix,
+            exclude_internal_nodes=False,
+            title='Test Tree',
+        )
 
 
 # def test_make_12snp_clusters():
