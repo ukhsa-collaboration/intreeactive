@@ -258,7 +258,7 @@ function formatKeyValuesAsNiceTable(inputObj) {
         tempRow.append(th_key, td_value)
         tempTableBody.append(tempRow)
 
-        if (k == "ID") {
+        if (k == idColumnName) {
             // add a class that we can use for styling
             td_value.classList.add("metadataId")
 
@@ -278,7 +278,7 @@ function formatKeyValuesAsNiceTable(inputObj) {
 
             // stage highlight all button
             var haBtn = new HighlightAllBtn()
-            haBtn.elm.mainId = inputObj.ID
+            haBtn.elm.mainId = inputObj[idColumnName]
 
             if (!snpThreshold) {
                 // it's an array, so we want to treat it differently
@@ -304,7 +304,7 @@ function formatKeyValuesAsNiceTable(inputObj) {
             }
             // if we've got a defined SNP threshold
             else {
-                var tempId = inputObj["ID"]
+                var tempId = inputObj[idColumnName]
                 var nnTempId = getNeighboursWithinSnpThreshold(tempId, snpThreshold)
 
                 if (nnTempId.length) {
@@ -344,7 +344,7 @@ function formatPairedKeyValuesAsNiceTable(inputObj, inputObj2) {
         tempRow.append(th_key, td_value, td_value2)
         tempTableBody.append(tempRow)
 
-        if (k == "ID") {
+        if (k == idColumnName) {
             // add a class that we can use for styling
             td_value.classList.add("metadataId")
             td_value2.classList.add("metadataId")
@@ -372,9 +372,9 @@ function formatPairedKeyValuesAsNiceTable(inputObj, inputObj2) {
 
             // stage highlight all button
             var haBtn = new HighlightAllBtn()
-            haBtn.elm.mainId = inputObj.ID
+            haBtn.elm.mainId = inputObj[idColumnName]
             var haBtn2 = new HighlightAllBtn()
-            haBtn2.elm.mainId = inputObj2.ID
+            haBtn2.elm.mainId = inputObj2[idColumnName]
 
             // if we're just using the minimum SNP distance
             // as our nearest neighbours
@@ -417,8 +417,8 @@ function formatPairedKeyValuesAsNiceTable(inputObj, inputObj2) {
             }
             // if we've got a defined SNP threshold
             else {
-                var tempId = inputObj["ID"]
-                var tempId2 = inputObj2["ID"]
+                var tempId = inputObj[idColumnName]
+                var tempId2 = inputObj2[idColumnName]
                 var nnTempId = getNeighboursWithinSnpThreshold(tempId, snpThreshold)
                 var nnTempId2 = getNeighboursWithinSnpThreshold(tempId2, snpThreshold)
 
@@ -891,6 +891,7 @@ const initialPlotTitleBboxWidth = plotTitleElm.getBBox().width // bounding box f
 var originalColours
 var originalMarkerSize = targetElm.data[0].marker.size
 var isCustomColoursEnabled = false
+const idColumnName = targetElm.layout.updatemenus[0].buttons[0].label
 var labelBy = targetElm.layout.updatemenus[0].buttons[0].label
 var isLabelsShown = false
 var snpThreshold
