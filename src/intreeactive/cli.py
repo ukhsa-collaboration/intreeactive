@@ -210,15 +210,6 @@ def main():
     # the order of the column names must match the row names (to store the index once).
     snp_distance_matrix = intreeactive.read_in_snp_dist_matrix(args.snp_distance_matrix_path)
 
-    # This checks if sample IDs match up in the various files - the samples in the tree must have metadata
-    # and nearest neighbour information.
-    checked_metadata = intreeactive.check_ids(
-        tree=tree, metadata=metadata_df, id_column=id_column, snp_dists=snp_distance_matrix, ignore_ids=args.ignore_ids
-    )
-
-    # The check_ids function also reduces the metadata down to only entries needed for the tree to save on computation:
-    metadata_df = checked_metadata if not checked_metadata.empty else metadata_df
-
     # Set up the title for the plot:
     today = datetime.date.today().strftime('%Y%m%d')
     title = args.title if args.title else f'Interactive Phylogeny, {today}'

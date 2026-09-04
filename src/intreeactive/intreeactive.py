@@ -18,6 +18,10 @@ from bs4 import BeautifulSoup as bs
 html_res = files('html_res')
 
 
+class IntreeactiveException(Exception):
+    pass
+
+
 def read_in_tree(
     *,
     path_to_tree: str | Path,
@@ -59,46 +63,58 @@ def read_in_metadata(path_to_metadata: str | Path, id_column: str | None = None)
 
 def read_in_snp_dist_matrix(path_to_snp_dists: str | Path) -> pd.DataFrame:
     """
-    Read in snp distance matrix using pandas. The row names and column names should match, and should be parsed as
-    strings.
+    Read in snp distance matrix using pandas. Expects all by all matrix, with sample in the first row and first column.
+
     :param path_to_snp_dists: string or path to the snp distance matrix.
+    :returns snpdist_matrix: pandas dataframe.
     """
     snpdist_matrix = pd.read_csv(path_to_snp_dists, sep=None, engine='python', index_col=0)
-    # Assert that the order of the columns is identical to the order of the rows that way we know we only need to store
-    # the index once
-    assert list(snpdist_matrix) == list(snpdist_matrix.columns)
+
     return snpdist_matrix
 
 
 def check_ids(
     *,
     tree,
-    metadata: pd.DataFrame,
+    metadata_df: pd.DataFrame,
     id_column: str = 'ID',
     snp_dists: pd.DataFrame,
     ignore_ids: list | str | None = None,
 ) -> pd.DataFrame:
     """
+    Check that the snp_dists matrix contains the same samples in the same order in index and columns.
     If a sample ID occurs in the tree, it must have metadata and snp distances (unless it is an ignored_id
-    like the outgroup)
+    like the outgroup).
     If a sample ID occurs in the metadata and not in the tree, irrelevant of existence in the snp-dist matrix,
     it can be dropped (for performance later).
     If a sample ID occurs in the snp_dists and not in the tree, it can be ignored.
 
     :param tree: Bio.Phylo.Newick.Tree object
     :param metadata: a dataframe with metadata - all cells should be strings.
-    :param snp_dists: a dataframe matrix of the snp distances. The row names and column names should match, and should
-    be parsed as strings.
+    :param snp_dists: a dataframe matrix of the snp distances. The row names and column names should match (this is
+        checked here)
     :param id_column: string, the name of the ID column used to link up the SNP distances.
     :param ignore_ids: optional; a list of strings or a string of IDs that should be ignored when checking presence of
     an ID in the tree, metadata and snp distance matrix, for example a reference or outgroup.
 
     :returns: metadata dataframe if changes made, else empty dataframe.
     """
+    # Check the order of the columns in the snp distance matrix is identical to the order of the rows - that way we
+    # only need to store the index once
+    if not list(snp_dists.index) == list(snp_dists.columns):
+        raise IntreeactiveException(
+            'The SNP distance matrix should be an all against all dataframe, where column names and row names contain'
+            'the same order of samples.'
+        )
+
+    metadata = metadata_df.copy()
     samples_in_tree = [leaf.name for leaf in tree.get_terminals()]
     samples_in_metadata = metadata[id_column].to_list()
     samples_in_snpdists = list(snp_dists)
-    # Check all samples in tree are in metadata and snp dists, if not, exit.
+
+    missing_ids_in_snpdists = []
+    missing_ids_in_metadata = []
+    # Check all samples in tree are in metadata and snp dists.
     for sample in samples_in_tree:
         if ignore_ids:
             # Handle whether ignore ids is a list of samples or one sample:
@@ -109,22 +125,32 @@ def check_ids(
             elif isinstance(ignore_ids, str) and sample == ignore_ids:
                 print(f'Allowing {sample}')
                 continue
-        # If sample is in tree but not in snpdists - this is critical failure - exit:
+        # If sample is in tree but not in snpdists - create a list of things missing:
         if sample not in samples_in_snpdists:
-            sys.exit(f'Error: \n Sample ID {sample} occurs in tree but not in snp distance matrix. \nExiting...')
-        # If sample is in tree but not in metadata - this is critical failure - exit
+            missing_ids_in_snpdists.append(sample)
+
+        # If sample is in tree but not in metadata - create a list of things missing:
         elif sample not in samples_in_metadata:
-            sys.exit(f'Error: \n Sample ID {sample} occurs in tree but not in the metadata. \nExiting...')
+            missing_ids_in_metadata.append(sample)
+
+    # If any samples are in the tree but NOT in the snp dists matrix or metadata, raise exception.
+    if missing_ids_in_snpdists:
+        raise IntreeactiveException(
+            f'Sample ID(s) {",".join(missing_ids_in_snpdists)} occur(s) in tree but not in snp distance matrix.'
+        )
+    if missing_ids_in_metadata:
+        raise IntreeactiveException(
+            f'Sample ID(s) {",".join(missing_ids_in_metadata)} occur(s) in tree but not in the metadata.'
+        )
+
     # If a sample is in the metadata but not in the tree, drop sample:
     for sample in samples_in_metadata:
         # Again, check for ignore ids:
         if ignore_ids:
             if isinstance(ignore_ids, list):
                 if sample in ignore_ids:
-                    print(f'Allowing {sample}')
                     continue
             elif isinstance(ignore_ids, str) and sample == ignore_ids:
-                print(f'Allowing {sample}')
                 continue
         if sample not in samples_in_tree:
             metadata = metadata[metadata[id_column] != sample]
@@ -556,7 +582,7 @@ def write_interactive_tree(
 ) -> None:
     """
     Create an interactive phylogeny (html) file for a given phylogeny file.
-    :param tree: Bio Phylo Tree object.
+    :param tree: Bio Phylo Tree object. Use read_in_tree function to read from file.
     :param output_name: A file name for or path and file name for the output (str). Do not add file format suffix.
     :param metadata: Pandas dataframe of metadata. Each column will be read in as hover text for the tree
         (pandas df)
@@ -570,6 +596,11 @@ def write_interactive_tree(
     """
     ##################
     # Set up:
+    print('Checking inputs...')
+
+    checked_metadata = check_ids(tree=tree, metadata_df=metadata, id_column=id_column, snp_dists=snp_distance_matrix)
+    metadata: pd.DataFrame = checked_metadata if not checked_metadata.empty else metadata
+    
     print(f"Creating Tree '{title}'... \n Number of leaves: {len(list(tree.get_terminals()))}")
 
     # Add nearest neighbours to the metadata dataframe
