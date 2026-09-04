@@ -891,7 +891,7 @@ const initialPlotTitleBboxWidth = plotTitleElm.getBBox().width // bounding box f
 var originalColours
 var originalMarkerSize = targetElm.data[0].marker.size
 var isCustomColoursEnabled = false
-var labelBy = "ID"
+var labelBy = targetElm.layout.updatemenus[0].buttons[0].label
 var isLabelsShown = false
 var snpThreshold
 const sunEmoji = "&#x2600;"
