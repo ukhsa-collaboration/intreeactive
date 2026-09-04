@@ -351,7 +351,6 @@ def test_get_colourings_missing_data(metadata_with_neighbours):
     metadata_with_neighbours.at[2, 'name'] = None
     metadata_with_neighbours.at[3, 'name'] = ''
 
-    
     colourings = intreeactive.get_colourings(
         metadata_with_neighbours,
         id_column=id_column,
@@ -393,7 +392,7 @@ def test_get_colourings_mixed_data(metadata_with_neighbours):
         node_list=node_list,
         intermediate_node_colour=internal_node_colour,
     )
-    
+
     assert (len(set(colourings.values()))) == 5, f'Expecting 5 different colours, got {len(set(colourings))}'
 
 
@@ -451,7 +450,6 @@ def test_all_same_date():
     )
     assert colours['internal1'] and colours['internal2'] == 'rgb(128, 128, 128)'  # these are internal nodes
     assert len([name for name in colours if colours[name] == 'rgb(0, 0, 131)']) == 4
-    
 
 
 def test_gradient_colours_with_missing_dates():
@@ -481,7 +479,7 @@ def test_gradient_colours_with_missing_dates():
         node_list=nodes_test_missing_dates,
         intermediate_node_colour=internal_node_colour,
     )
-    
+
     print(
         f'\n Colours are assigned as a gradient for the dates, such that:\n'
         f'    - no dates are given rgb(0, 0, 0),\n'
@@ -564,6 +562,7 @@ def test_create_tree(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_p
         title='Test Tree',
     )
 
+
 def test_create_tree_no_internal_nodes(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_path):
     intreeactive.write_interactive_tree(
         tree=test_tree,
@@ -573,6 +572,19 @@ def test_create_tree_no_internal_nodes(test_tree, metadata_with_neighbours, snp_
         snp_distance_matrix=snp_dist_matrix,
         exclude_internal_nodes=True,
         title='Test Tree',
+    )
+
+
+def test_create_tree_x_axis_range(test_tree, metadata_with_neighbours, snp_dist_matrix, tmp_path):
+    intreeactive.write_interactive_tree(
+        tree=test_tree,
+        output_name=Path(tmp_path / 'test_tree.html'),
+        metadata=metadata_with_neighbours,
+        id_column='ID',
+        snp_distance_matrix=snp_dist_matrix,
+        exclude_internal_nodes=True,
+        title='Test Tree',
+        x_axis_range=[-20, 20],
     )
 
 

@@ -354,7 +354,7 @@ def get_colourings(
     # For each row in the metadata field with the index, get the index in text list
     for node_name in node_list:
         if node_name is not None:
-            node_category = metadata_df.loc[metadata_df[id_column] == node_name, category]
+            node_category: pd.Series = metadata_df.loc[metadata_df[id_column] == node_name, category]  # ty: ignore[invalid-assignment]
             if node_category.empty:
                 node_colours[node_name] = intermediate_node_colour
             else:
@@ -421,7 +421,7 @@ def get_continuous_colourings(
     for node_name in node_list:
         if node_name is not None:
             # Only colour entries in the metadata that match in the tree
-            date_delta = metadata_copy.loc[metadata_copy[id_column] == node_name, 'date_delta']
+            date_delta: pd.Series = metadata_copy.loc[metadata_copy[id_column] == node_name, 'date_delta']  # ty: ignore[invalid-assignment]
             if date_delta.empty:
                 gradient_colours[node_name] = intermediate_node_colour
             else:
@@ -552,6 +552,7 @@ def write_interactive_tree(
     snp_distance_matrix: pd.DataFrame,
     exclude_internal_nodes: bool = False,
     title: str | None = None,
+    x_axis_range: list[int] | None = None,
 ) -> None:
     """
     Create an interactive phylogeny (html) file for a given phylogeny file.
@@ -563,6 +564,8 @@ def write_interactive_tree(
     :param snp_distance_matrix: Pandas dataframe with all against all SNP distances. Column order must match row
         order (pandas df)
     :param title: string, title of the plot.
+    :param x_axis_range: the range of the x-axis the resulting interactive tree should be plotted on. Default is None,
+    meaning the tree is autoscaled to fit. e.g. x_axis_range=[-20, 20].
     :return: None, but html files are created
     """
     ##################
@@ -770,6 +773,13 @@ def write_interactive_tree(
             visible=False,
         )
     )
+
+    # Set x-axis range if provided.
+    if x_axis_range:
+        if len(x_axis_range) == 2:
+            fig.update_xaxes(range=x_axis_range)
+        else:
+            raise ValueError('x_axis_range arg should be a list of two int values, e.g. [-10, 20].')
 
     ###########
     # 8. Jsonify data for javascript shenanigans
