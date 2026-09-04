@@ -354,7 +354,7 @@ def get_colourings(
     # For each row in the metadata field with the index, get the index in text list
     for node_name in node_list:
         if node_name is not None:
-            node_category = metadata_df.loc[metadata_df[id_column] == node_name, category]
+            node_category: pd.Series = metadata_df.loc[metadata_df[id_column] == node_name, category]  # ty: ignore[invalid-assignment]
             if node_category.empty:
                 node_colours[node_name] = intermediate_node_colour
             else:
@@ -421,7 +421,7 @@ def get_continuous_colourings(
     for node_name in node_list:
         if node_name is not None:
             # Only colour entries in the metadata that match in the tree
-            date_delta = metadata_copy.loc[metadata_copy[id_column] == node_name, 'date_delta']
+            date_delta: pd.Series = metadata_copy.loc[metadata_copy[id_column] == node_name, 'date_delta']  # ty: ignore[invalid-assignment]
             if date_delta.empty:
                 gradient_colours[node_name] = intermediate_node_colour
             else:
